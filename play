@@ -1,0 +1,151 @@
+#! /usr/bin/env python3
+
+#            DOC HAIKU
+#      calling wine is dumb
+#   run this here program instead
+#    save your fingerstrength
+
+import os, sys
+
+def showHelp():
+    os.system('clear')
+    print('\nUsage:')
+    print(' ./play <emulator>')
+    print('     - open emulator')
+    print(' ./play <emulator> <game>')
+    print('     - open game with emulator')
+    print(' ./play show consoles')
+    print('     - show consoles with available games')
+    print(' ./play show emulators')
+    print('     - show emulators available for use')
+    print(' ./play show <console>')
+    print('     - show games available from specific console')
+    print('\n')
+
+
+command = 'wine ~/Games/emulators/'
+
+
+if len(sys.argv) > 1 and len(sys.argv) <= 3:
+
+    emulators = os.listdir('/Users/davidmaness/Games/emulators')
+    systems = os.listdir('/Users/davidmaness/Games/roms/')
+
+
+    # user is asking to see something
+    if sys.argv[1].lower() == 'show':
+
+
+        # show games if user asks
+        if sys.argv[2].lower() in systems:
+            os.system('clear')
+            print('\nHere are the games available for ' + sys.argv[2].title() + ':\n')
+            for game in os.listdir('/Users/davidmaness/Games/roms/' + sys.argv[2].lower() + '/'):
+                print(game.lower())
+            print('\n')
+
+        # show consoles if user asks
+        elif sys.argv[2].lower() == 'consoles' or sys.argv[2].lower() == 'systems':
+            os.system('clear')
+            print('\nHere are the consoles with games available:\n')
+            for console in os.listdir('/Users/davidmaness/Games/roms/'):
+                print(console.lower())
+            print('\n')
+
+
+        elif sys.argv[2].lower() == 'emulators':
+            os.system('clear')
+            print('\nHere are the emulators available for use:\n')
+            for emu in os.listdir('/Users/davidmaness/Games/emulators/'):
+                print(emu.lower())
+            print('\n')
+
+
+    # if user is asking for help
+    elif sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
+        showHelp()
+
+
+    # none of those, so user must be trying to play a game
+    system = sys.argv[1].lower()
+
+    if system == 'nes' or system == 'nintendo':
+        emulator = 'fceux'
+    elif system == 'snes' or system == 'super_nintendo':
+        emulator = 'snes9x'
+    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':
+        
+        # fix to add emulator
+        print('Emulator for Nintendo 64 is not available yet.')
+        sys.exit(0)
+    elif system == 'genesis' or system == 'sega_genesis' or system == 'sg' or system == 'sega':
+        
+        # fix to add emulator
+        print('Emulator for Sega Genesis is not available yet.')
+        sys.exit(0)
+
+    elif system == 'atari':
+        while system is not '1' and system is not '2' and system is not '3':
+            print('Which Atari do you want to play?\n')
+            print('1: Atari 2600')
+            print('2: Atari 5200')
+            print('3: Atari 7800')
+            system = input()
+        if system == '1':
+            system = 'atari_2600'
+        if system == '2':
+            system = 'atari_5200'
+        if system == '3':
+            system = 'atari_7800'
+
+    elif system == 'gb' or system == 'gameboy' or system == 'game_boy':
+        
+        # fix to add emulator
+        print('Emulator for Gameboy is not available yet.')
+        sys.exit(0)
+
+    elif system == 'gbc' or system == 'gameboycolor' or system == 'gameboy_color' or system == 'gbcolor':
+
+        # fix to add emulator
+        print('Emulator for Gameboy Color is not available yet.')
+        sys.exit(0)
+
+    elif system == 'gba' or system == 'gameboyadvance' or system == 'gameboy_advance' or system == 'gbadvance' or system == 'gbadv':
+
+        # fix to add emulator
+        print('Emulator for Gameboy Advance is not available yet.')
+        sys.exit(0)
+
+
+    # display error message
+    else:
+        print('Command not understood.')
+        sys.exit(0)
+
+    command += emulator + '/' + emulator + '.exe'
+
+    if len(sys.argv) == 3:  # ./play nes super_mario_bros
+
+        game = sys.argv[2].lower()
+        try:
+            rom = os.listdir('/Users/davidmaness/Games/roms/' + system + '/' + game + '/')[0]
+        except:
+            print('There was a problem finding the ROM.')
+
+        command += ' /Users/davidmaness/Games/roms/' + system + '/' + game + '/' + rom
+
+
+
+
+
+    # run command and play!
+    os.system(command)
+
+
+
+else:  # user just entered './play'
+    showHelp()
+
+
+# exit program
+sys.exit(0)
