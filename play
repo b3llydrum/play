@@ -9,15 +9,15 @@ import os, sys
 
 def showHelp():
     os.system('clear')
-    print('\nUsage:')
+    print('\nUsage:\n')
     print(' ./play <emulator>')
-    print('     - open emulator')
+    print('     - open emulator\n')
     print(' ./play <emulator> <game>')
-    print('     - open game with emulator')
+    print('     - open game with emulator\n')
     print(' ./play show consoles')
-    print('     - show consoles with available games')
+    print('     - show consoles with available games\n')
     print(' ./play show emulators')
-    print('     - show emulators available for use')
+    print('     - show emulators available for use\n')
     print(' ./play show <console>')
     print('     - show games available from specific console')
     print('\n')
@@ -26,6 +26,7 @@ def showHelp():
 command = 'wine ~/Games/emulators/'
 
 
+# if user provides 2 or 3 arguments with command
 if len(sys.argv) > 1 and len(sys.argv) <= 3:
 
     emulators = os.listdir('/Users/davidmaness/Games/emulators')
@@ -35,6 +36,10 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
     # user is asking to see something
     if sys.argv[1].lower() == 'show':
 
+        # if user only says 'show'
+        if len(sys.argv) == 2:
+            showHelp()
+            sys.exit(0)
 
         # show games if user asks
         if sys.argv[2].lower() in systems:
@@ -90,6 +95,7 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
             print('1: Atari 2600')
             print('2: Atari 5200')
             print('3: Atari 7800')
+            print('\n')
             system = input()
         if system == '1':
             system = 'atari_2600'
@@ -136,11 +142,8 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
 
 
 
-
-
     # run command and play!
     os.system(command)
-
 
 
 else:  # user just entered './play'
