@@ -76,15 +76,16 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
 
     if system == 'nes' or system == 'nintendo':
         emulator = 'fceux'
+
     elif system == 'snes' or system == 'super_nintendo':
-        emulator = 'snes9x'
-    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':
-        
+        emulator = 'lsnes'
+
+    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':        
         # fix to add emulator
         print('Emulator for Nintendo 64 is not available yet.')
         sys.exit(0)
+
     elif system == 'genesis' or system == 'sega_genesis' or system == 'sg' or system == 'sega':
-        
         # fix to add emulator
         print('Emulator for Sega Genesis is not available yet.')
         sys.exit(0)
@@ -105,19 +106,16 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
             system = 'atari_7800'
 
     elif system == 'gb' or system == 'gameboy' or system == 'game_boy':
-        
         # fix to add emulator
         print('Emulator for Gameboy is not available yet.')
         sys.exit(0)
 
     elif system == 'gbc' or system == 'gameboycolor' or system == 'gameboy_color' or system == 'gbcolor':
-
         # fix to add emulator
         print('Emulator for Gameboy Color is not available yet.')
         sys.exit(0)
 
     elif system == 'gba' or system == 'gameboyadvance' or system == 'gameboy_advance' or system == 'gbadvance' or system == 'gbadv':
-
         # fix to add emulator
         print('Emulator for Gameboy Advance is not available yet.')
         sys.exit(0)
@@ -125,20 +123,36 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
 
     # display error message
     else:
-        print('Command not understood.')
+        if system != 'show':
+            print('Command not understood.')
         sys.exit(0)
 
-    command += emulator + '/' + emulator + '.exe'
+    command += emulator + '/' + emulator + '.exe '
 
     if len(sys.argv) == 3:  # ./play nes super_mario_bros
 
-        game = sys.argv[2].lower()
-        try:
-            rom = os.listdir('/Users/davidmaness/Games/roms/' + system + '/' + game + '/')[0]
-        except:
-            print('There was a problem finding the ROM.')
 
-        command += ' /Users/davidmaness/Games/roms/' + system + '/' + game + '/' + rom
+        # lsnes is kinda broken, so hardcode any three-arg commands to just open lsnes
+
+        if emulator == 'fceux':
+            consoleExtensionList = ['.nes']
+        elif emulator == 'lsnes':
+            consoleExtensionList = ['.sfc', '.smc']
+        else:
+            consoleExtensionList = []
+
+        game = sys.argv[2].lower()
+        if emulator != 'lsnes':
+            romDir = '/Users/davidmaness/Games/roms/' + system + '/' + game + '/'
+
+            # this part makes it so it only plays purified files
+            for file in os.listdir(romDir):
+                for extension in consoleExtensionList:
+                    if file == game + extension:
+                        romDir += file
+                        continue
+            command += romDir
+
 
 
 
