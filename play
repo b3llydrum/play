@@ -25,6 +25,77 @@ def showHelp():
 
 command = 'wine ~/Games/emulators/'
 
+# attaches possible user inputs to their respective console directory name
+consoleDict = {
+    'atari_2600' : ['atari_2600'],
+    'atari_5200' : ['atari_5200'],
+    'atari_7800' : ['atari_7800'],
+    'gameboy' : ['gb',
+                 'gameboy',
+                 'game_boy',
+                 ],
+    'gameboy_color' : ['gbc',
+                       'gameboycolor',
+                       'gbcolor',
+                       'gameboy_color',
+                       'game_boy_color',
+                       ],
+    'gameboy_advance' : ['gba',
+                         'gameboyadvance',
+                         'gbadvance',
+                         'gameboy_advance',
+                         'game_boy_advance',
+                         ],
+    'n64' : ['n64',
+             'nintendo64',
+             'nintendo_64',
+             ],
+    'nes' : ['nes',
+             'nintendo',
+             ],
+    'psx' : ['psx',
+             'ps1',
+             'psone',
+             'playstation',
+             'playstation_1',
+             'playstation_one',
+             'play_station',
+             ],
+    'snes' : ['snes',
+              'supernintendo',
+              'super_nintendo',
+              'super_nes',
+              ],
+    'sega_32x' : ['32x',
+                  'sega_32x',
+                  'sega32',
+                  'sega32x',
+                  '32',
+                  ],
+    'sega_cd' : ['sega_cd',
+                 'segacd',
+                 ],
+    'sega_genesis' : ['genesis',
+                      'sega_genesis',
+                      'segagenesis',
+                      'sega',
+                      ],
+}
+
+# list of inputs that could reference consoles available thru OpenEmu
+# these are indexed, so do not change
+# unless you want to adjust the extensions around line 160
+openEmuList = [
+    'gb', 'gameboy', 'game_boy',            # gameboy
+    'gbc', 'gameboycolor', 'gbcolor',       # gameboy color
+    'gameboy_color', 'game_boy_color',
+    'gba', 'gameboyadvance', 'gbadvance',   # gameboy advance
+    'gameboy_advance', 'game_boy_advance'
+    ]
+
+# initialize to False
+openEmuFlag = False
+
 
 # if user provides 2 or 3 arguments with command
 if len(sys.argv) > 1 and len(sys.argv) <= 3:
@@ -32,6 +103,9 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
     emulators = os.listdir('/Users/davidmaness/Games/emulators')
     systems = os.listdir('/Users/davidmaness/Games/roms/')
 
+
+
+    ''' play show ...'''
 
     # user is asking to see something
     if sys.argv[1].lower() == 'show':
@@ -57,7 +131,7 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
                 print(console.lower())
             print('\n')
 
-
+        # show emulators if user asks
         elif sys.argv[2].lower() == 'emulators':
             os.system('clear')
             print('\nHere are the emulators available for use:\n')
@@ -66,13 +140,37 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
             print('\n')
 
 
+
+
+
+    #''' play help ...'''
+
     # if user is asking for help
     elif sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
         showHelp()
 
 
+
+
+
+
+    #''' play ... ...'''
+
     # none of those, so user must be trying to play a game
+    # the word after play is the system
     system = sys.argv[1].lower()
+
+    consoleExists = False
+    for key, value in consoleDict.items():
+        if system in value:
+            console = key
+            consoleExists = True
+
+    print('Console == {console}'.format(console=console))
+
+    if not consoleExists:
+        print('Cannot find console.')
+        sys.exit(1)
 
     if system == 'nes' or system == 'nintendo':
         emulator = 'fceux'
@@ -80,7 +178,7 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
     elif system == 'snes' or system == 'super_nintendo':
         emulator = 'lsnes'
 
-    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':        
+    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':
         # fix to add emulator
         print('Emulator for Nintendo 64 is not available yet.')
         sys.exit(0)
@@ -105,20 +203,10 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
         if system == '3':
             system = 'atari_7800'
 
-    elif system == 'gb' or system == 'gameboy' or system == 'game_boy':
-        # fix to add emulator
-        print('Emulator for Gameboy is not available yet.')
-        sys.exit(0)
+    elif system in openEmuList:
 
-    elif system == 'gbc' or system == 'gameboycolor' or system == 'gameboy_color' or system == 'gbcolor':
-        # fix to add emulator
-        print('Emulator for Gameboy Color is not available yet.')
-        sys.exit(0)
-
-    elif system == 'gba' or system == 'gameboyadvance' or system == 'gameboy_advance' or system == 'gbadvance' or system == 'gbadv':
-        # fix to add emulator
-        print('Emulator for Gameboy Advance is not available yet.')
-        sys.exit(0)
+        openEmuFlag = True
+        emulator = 'OpenEmu'
 
 
     # display error message
@@ -127,7 +215,18 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
             print('Command not understood.')
         sys.exit(0)
 
-    command += emulator + '/' + emulator + '.exe '
+
+    # change the command depending on if using OpenEmu or not
+    if openEmuFlag:
+        command = 'open -a OpenEmu '
+    else:
+        command += emulator + '/' + emulator + '.exe '
+
+
+
+
+
+    ''' play snes super_mario_world '''
 
     if len(sys.argv) == 3:  # ./play nes super_mario_bros
 
@@ -138,12 +237,27 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
             consoleExtensionList = ['.nes']
         elif emulator == 'lsnes':
             consoleExtensionList = ['.sfc', '.smc']
+        elif emulator == 'OpenEmu':
+            if system in openEmuList[:3]:
+                consoleExtensionList = ['.gb']
+            elif system in openEmuList[3:8]:
+                consoleExtensionList = ['.gb', '.gbc']
+            elif system in openEmuList[8:]:
+                consoleExtensionList = ['.gb', '.gbc', '.gba']
         else:
             consoleExtensionList = []
 
         game = sys.argv[2].lower()
+
+        print('Emulator: {emulator}, system: {system}\n'.format(
+            emulator=emulator,
+            system=system
+        ))
+
+
+        '''                 THIS PART MAKES LSNES ONLY BOOT UP EMU WITHOUT GAMES
         if emulator != 'lsnes':
-            romDir = '/Users/davidmaness/Games/roms/' + system + '/' + game + '/'
+            romDir = '/Users/davidmaness/Games/roms/' + system + '_cleaned/' + game + '/'
 
             # this part makes it so it only plays purified files
             for file in os.listdir(romDir):
@@ -152,10 +266,26 @@ if len(sys.argv) > 1 and len(sys.argv) <= 3:
                         romDir += file
                         continue
             command += romDir
+        '''
 
 
 
+        '''                 THIS PART LETS LSNES TAKE A ROM ARG             '''
+        romDir = '/Users/davidmaness/Games/roms/' + console + '/' + game + '/'
 
+        for file in os.listdir(romDir):
+            for extension in consoleExtensionList:
+                if file == game + extension:
+                    romDir += file
+                    continue
+        command += romDir
+
+    print('Command: {command}'.format(command=command))
+    print('Emulator is {emu}\nConsole is {console}\nGame is {game}'.format(
+        emu=emulator,
+        console=console,
+        game=game
+    ))
     # run command and play!
     os.system(command)
 
