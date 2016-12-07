@@ -20,7 +20,7 @@ extensionDict = {
     'gameboy_advance' : ['.gba'],
     'nes' : ['.nes'],
     'snes' : ['.sfc',
-              '.sfc'
+              '.smc'
               ],
 }
 

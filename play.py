@@ -16,8 +16,9 @@ from data import *
 from functions import *
 
 # initialize directories to be used by play.py
-emulators = os.listdir('/Users/davidmaness/Games/emulators/')
-systems = os.listdir('/Users/davidmaness/Games/roms/')
+home = os.path.expanduser('~')
+emulators = os.listdir('{home}/Games/emulators/'.format(home=home))
+systems = os.listdir('{home}/Games/roms/'.format(home=home))
 
 # OpenEmu does not emulate the user-specified console
 openEmuFlag = False
@@ -63,15 +64,22 @@ if sys.argv[1].lower() == 'show':
     # show games if user asks
     if system in systems:
         os.system('clear')
-        print('\nHere are the games available for ' + system + ':\n')
-        for game in os.listdir('/Users/davidmaness/Games/roms/' + system + '/'):
+        print('\nHere are the games available for {system}:\n'.format(
+            system=system
+        ))
+        for game in os.listdir('{home}/Games/roms/{system}/'.format(
+            home=home,
+            system=system
+        )):
             print(game.lower())
 
     # show consoles if user asks
     elif system == 'consoles' or sys.argv[2].lower() == 'systems':
         os.system('clear')
         print('\nHere are the consoles with games available:\n')
-        for console in os.listdir('/Users/davidmaness/Games/roms/'):
+        for console in os.listdir('{home}/Games/roms/'.format(
+            home=home
+        )):
             print(console.lower())
 
     # show emulators if user asks
@@ -190,14 +198,15 @@ if len(sys.argv) == 3:
     game = sys.argv[2].lower()
 
     # create game filepath from user input
-    gamePath = '/Users/davidmaness/Games/roms/{system}/{game}/'.format(
+    gamePath = '{home}/Games/roms/{system}/{game}/'.format(
+        home=home,
         system=system,
         game=game
     )
 
     # if the game doesn't exist, throw an error
     if not os.path.isdir(gamePath):
-        print('Cannot find the game {game}.'.format(
+        print('\nCannot find the game {game}.\nIt\'s possible the game folders have not been renamed.\n'.format(
             game=game
         ))
         sys.exit(1)
@@ -205,16 +214,18 @@ if len(sys.argv) == 3:
     # find the extension
     for i in os.listdir(gamePath):
         for ext in extensionDict[system]:
+            # this part will only work if game files
+            # have the same name as their containing folder
             if i == '{game}{ext}'.format(game=game, ext=ext):
                 extension = ext
+            else:
+                print('\nCannot find the game {game}.\nIt\'s possible the filename has not yet been formatted.\n'.format(
+                    game=game
+                ))
+                sys.exit(1)
 
-
-    print('GamePath: {gamePath}'.format(gamePath=gamePath))
-    print('System: {system}'.format(system=system))
-    print('Game: {game}'.format(game=game))
-    print('Extension: {ext}'.format(ext=extension))
-
-    command += ' ~/Games/roms/{system}/{game}/{game}{ext}'.format(
+    command += ' {home}/Games/roms/{system}/{game}/{game}{ext}'.format(
+        home=home,
         system=system,
         game=game,
         ext=extension
