@@ -1,298 +1,232 @@
 #! /usr/bin/env python3
 
-#            DOC HAIKU
-#      calling wine is dumb
-#   run this here program instead
-#    save your fingerstrength
 
-import os, sys
-
-def showHelp():
-    os.system('clear')
-    print('\nUsage:\n')
-    print(' ./play <emulator>')
-    print('     - open emulator\n')
-    print(' ./play <emulator> <game>')
-    print('     - open game with emulator\n')
-    print(' ./play show consoles')
-    print('     - show consoles with available games\n')
-    print(' ./play show emulators')
-    print('     - show emulators available for use\n')
-    print(' ./play show <console>')
-    print('     - show games available from specific console')
-    print('\n')
+'''''''''''''''''''''''''''''''''''''''''''''
+#                DOC HAIKU                  #
+#          calling wine is dumb             #
+#       run this here program instead       #
+#        save yer fingerstrength            #
+#                                           #
+'''''''''''''''''''''''''''''''''''''''''''''
 
 
-command = 'wine ~/Games/emulators/'
+import os
+import sys
+from data import *
+from functions import *
 
-# attaches possible user inputs to their respective console directory name
-consoleDict = {
-    'atari_2600' : ['atari_2600'],
-    'atari_5200' : ['atari_5200'],
-    'atari_7800' : ['atari_7800'],
-    'gameboy' : ['gb',
-                 'gameboy',
-                 'game_boy',
-                 ],
-    'gameboy_color' : ['gbc',
-                       'gameboycolor',
-                       'gbcolor',
-                       'gameboy_color',
-                       'game_boy_color',
-                       ],
-    'gameboy_advance' : ['gba',
-                         'gameboyadvance',
-                         'gbadvance',
-                         'gameboy_advance',
-                         'game_boy_advance',
-                         ],
-    'n64' : ['n64',
-             'nintendo64',
-             'nintendo_64',
-             ],
-    'nes' : ['nes',
-             'nintendo',
-             ],
-    'psx' : ['psx',
-             'ps1',
-             'psone',
-             'playstation',
-             'playstation_1',
-             'playstation_one',
-             'play_station',
-             ],
-    'snes' : ['snes',
-              'supernintendo',
-              'super_nintendo',
-              'super_nes',
-              ],
-    'sega_32x' : ['32x',
-                  'sega_32x',
-                  'sega32',
-                  'sega32x',
-                  '32',
-                  ],
-    'sega_cd' : ['sega_cd',
-                 'segacd',
-                 ],
-    'sega_genesis' : ['genesis',
-                      'sega_genesis',
-                      'segagenesis',
-                      'sega',
-                      ],
-}
+# initialize directories to be used by play.py
+emulators = os.listdir('/Users/davidmaness/Games/emulators/')
+systems = os.listdir('/Users/davidmaness/Games/roms/')
 
-# list of inputs that could reference consoles available thru OpenEmu
-# these are indexed, so do not change
-# unless you want to adjust the extensions around line 160
-openEmuList = [
-    'gb', 'gameboy', 'game_boy',            # gameboy
-    'gbc', 'gameboycolor', 'gbcolor',       # gameboy color
-    'gameboy_color', 'game_boy_color',
-    'gba', 'gameboyadvance', 'gbadvance',   # gameboy advance
-    'gameboy_advance', 'game_boy_advance'
-    ]
-
-# initialize to False
+# OpenEmu does not emulate the user-specified console
 openEmuFlag = False
 
-
-# if user provides 2 or 3 arguments with command
-if len(sys.argv) > 1 and len(sys.argv) <= 3:
-
-    emulators = os.listdir('/Users/davidmaness/Games/emulators')
-    systems = os.listdir('/Users/davidmaness/Games/roms/')
+# if input error
+if len(sys.argv) not in range(2, 4):
+    showHelp()
+    sys.exit(0)
 
 
 
-    ''' play show ...'''
 
-    # user is asking to see something
-    if sys.argv[1].lower() == 'show':
-
-        # if user only says 'show'
-        if len(sys.argv) == 2:
-            showHelp()
-            sys.exit(0)
-
-        # show games if user asks
-        if sys.argv[2].lower() in systems:
-            os.system('clear')
-            print('\nHere are the games available for ' + sys.argv[2].title() + ':\n')
-            for game in os.listdir('/Users/davidmaness/Games/roms/' + sys.argv[2].lower() + '/'):
-                print(game.lower())
-            print('\n')
-
-        # show consoles if user asks
-        elif sys.argv[2].lower() == 'consoles' or sys.argv[2].lower() == 'systems':
-            os.system('clear')
-            print('\nHere are the consoles with games available:\n')
-            for console in os.listdir('/Users/davidmaness/Games/roms/'):
-                print(console.lower())
-            print('\n')
-
-        # show emulators if user asks
-        elif sys.argv[2].lower() == 'emulators':
-            os.system('clear')
-            print('\nHere are the emulators available for use:\n')
-            for emu in os.listdir('/Users/davidmaness/Games/emulators/'):
-                print(emu.lower())
-            print('\n')
+'''                                 PART I
+                                help, or show
+'''
 
 
 
 
 
-    #''' play help ...'''
 
-    # if user is asking for help
-    elif sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
+''' PLAY SHOW'''
+
+# user is asking to see something
+if sys.argv[1].lower() == 'show':
+
+    ''' find out what the user wants to be shown and show it '''
+
+    # if user only says 'show'
+    if len(sys.argv) == 2:
         showHelp()
+        sys.exit(0)
 
+    # this is what user is asking to be shown
+    system = sys.argv[2].lower()
 
-
-
-
-
-    #''' play ... ...'''
-
-    # none of those, so user must be trying to play a game
-    # the word after play is the system
-    system = sys.argv[1].lower()
-
-    consoleExists = False
+    # collect console if exists
     for key, value in consoleDict.items():
         if system in value:
-            console = key
-            consoleExists = True
+            system = key
+            continue
 
-    print('Console == {console}'.format(console=console))
+    # show games if user asks
+    if system in systems:
+        os.system('clear')
+        print('\nHere are the games available for ' + system + ':\n')
+        for game in os.listdir('/Users/davidmaness/Games/roms/' + system + '/'):
+            print(game.lower())
 
-    if not consoleExists:
-        print('Cannot find console.')
-        sys.exit(1)
+    # show consoles if user asks
+    elif system == 'consoles' or sys.argv[2].lower() == 'systems':
+        os.system('clear')
+        print('\nHere are the consoles with games available:\n')
+        for console in os.listdir('/Users/davidmaness/Games/roms/'):
+            print(console.lower())
 
-    if system == 'nes' or system == 'nintendo':
-        emulator = 'fceux'
+    # show emulators if user asks
+    elif system == 'emulators':
+        os.system('clear')
+        print('\nHere are the emulators available for use:\n')
+        for emu in os.listdir('/Users/davidmaness/Games/emulators/'):
+            print(emu.lower())
 
-    elif system == 'snes' or system == 'super_nintendo':
-        emulator = 'lsnes'
-
-    elif system == 'n64' or system == 'n64' or system == 'nintendo64' or system == 'nintendo_64':
-        # fix to add emulator
-        print('Emulator for Nintendo 64 is not available yet.')
-        sys.exit(0)
-
-    elif system == 'genesis' or system == 'sega_genesis' or system == 'sg' or system == 'sega':
-        # fix to add emulator
-        print('Emulator for Sega Genesis is not available yet.')
-        sys.exit(0)
-
-    elif system == 'atari':
-        while system is not '1' and system is not '2' and system is not '3':
-            print('Which Atari do you want to play?\n')
-            print('1: Atari 2600')
-            print('2: Atari 5200')
-            print('3: Atari 7800')
-            print('\n')
-            system = input()
-        if system == '1':
-            system = 'atari_2600'
-        if system == '2':
-            system = 'atari_5200'
-        if system == '3':
-            system = 'atari_7800'
-
-    elif system in openEmuList:
-
-        openEmuFlag = True
-        emulator = 'OpenEmu'
+    print('\n')
+    sys.exit(0)
 
 
-    # display error message
-    else:
-        if system != 'show':
-            print('Command not understood.')
-        sys.exit(0)
+''' PLAY HELP '''
 
+# if user is asking for help
+if sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
+    showHelp()
+    sys.exit(0)
 
-    # change the command depending on if using OpenEmu or not
-    if openEmuFlag:
-        command = 'open -a OpenEmu '
-    else:
-        command += emulator + '/' + emulator + '.exe '
+# if first argument isn't show or help, assign it to system
+system = sys.argv[1].lower()
 
 
 
 
 
-    ''' play snes super_mario_world '''
-
-    if len(sys.argv) == 3:  # ./play nes super_mario_bros
 
 
-        # lsnes is kinda broken, so hardcode any three-arg commands to just open lsnes
 
-        if emulator == 'fceux':
-            consoleExtensionList = ['.nes']
-        elif emulator == 'lsnes':
-            consoleExtensionList = ['.sfc', '.smc']
-        elif emulator == 'OpenEmu':
-            if system in openEmuList[:3]:
-                consoleExtensionList = ['.gb']
-            elif system in openEmuList[3:8]:
-                consoleExtensionList = ['.gb', '.gbc']
-            elif system in openEmuList[8:]:
-                consoleExtensionList = ['.gb', '.gbc', '.gba']
-        else:
-            consoleExtensionList = []
 
-        game = sys.argv[2].lower()
+'''                                           PART II
+                                 user is asking to open a program
 
-        print('Emulator: {emulator}, system: {system}\n'.format(
-            emulator=emulator,
+
+
+
+
+              /----yes---- (consoleExists==True, emulatorExists==False, system == <console>, emulator == <emulator>)
+ console? ---/
+              \                           /-----yes (consoleExists==False, emulatorExists==True, system == <emulator>)
+               \----no--- emulator? -----/
+                                          \
+                                           \----no---- error -> quit
+'''
+
+# find out if user provided a console or an emulator
+isConsole, isEmulator = False, False
+
+# check all consoles
+for key, value in consoleDict.items():
+    if system in value:
+        system = key
+        # check emulators for console
+        for key, value in emulatorConsoleDict.items():
+            if system in value:
+                emulator = key
+        isConsole = True
+
+# if not a console, check all emulators
+if not isConsole:
+    for key, value in emulatorConsoleDict.items():
+        if system == key.lower():
+            system = key.lower()
+            isEmulator = True
+
+    # if not a console or an emulator, return an error and quit
+    if not isEmulator:
+        print('Console or emulator \'{system}\' not understood.'.format(
             system=system
         ))
+        sys.exit(1)
 
 
-        '''                 THIS PART MAKES LSNES ONLY BOOT UP EMU WITHOUT GAMES
-        if emulator != 'lsnes':
-            romDir = '/Users/davidmaness/Games/roms/' + system + '_cleaned/' + game + '/'
+# now the program knows whether to launch a console or emulator
+# and the exact console or emulator is stored in system
 
-            # this part makes it so it only plays purified files
-            for file in os.listdir(romDir):
-                for extension in consoleExtensionList:
-                    if file == game + extension:
-                        romDir += file
-                        continue
-            command += romDir
-        '''
+if isConsole:
+    if system in openEmuList:
+        command = 'open -a OpenEmu'
+    else:
+        if emulator in wineList:
+            command = 'wine ~/Games/emulators/{emulator}/{emulator}.exe'.format(
+                emulator=emulator
+                )
+        elif emulator in osxList:
+            command = 'open -a {emulator}'
+
+
+elif isEmulator:
+    if system in wineList:
+        command = 'wine ~/Games/emulators/{system}/{system}.exe'.format(
+            system=system
+            )
+    elif system in osxList:
+        command = 'open -a {system}'.format(
+            system=system
+        )
+else:
+    print('There has been an error.\nSystem check is leaking.')
+    sys.exit(2)
 
 
 
-        '''                 THIS PART LETS LSNES TAKE A ROM ARG             '''
-        romDir = '/Users/davidmaness/Games/roms/' + console + '/' + game + '/'
 
-        for file in os.listdir(romDir):
-            for extension in consoleExtensionList:
-                if file == game + extension:
-                    romDir += file
-                    continue
-        command += romDir
 
-    print('Command: {command}'.format(command=command))
-    print('Emulator is {emu}\nConsole is {console}\nGame is {game}'.format(
-        emu=emulator,
-        console=console,
+'''                                 PART III
+                       if user asks to open a specific game
+'''
+
+
+
+# run this only if a second argument (game) is specified
+if len(sys.argv) == 3:
+
+    game = sys.argv[2].lower()
+
+    # create game filepath from user input
+    gamePath = '/Users/davidmaness/Games/roms/{system}/{game}/'.format(
+        system=system,
         game=game
-    ))
-    # run command and play!
-    os.system(command)
+    )
+
+    # if the game doesn't exist, throw an error
+    if not os.path.isdir(gamePath):
+        print('Cannot find the game {game}.'.format(
+            game=game
+        ))
+        sys.exit(1)
+
+    # find the extension
+    for i in os.listdir(gamePath):
+        for ext in extensionDict[system]:
+            if i == '{game}{ext}'.format(game=game, ext=ext):
+                extension = ext
 
 
-else:  # user just entered './play'
-    showHelp()
+    print('GamePath: {gamePath}'.format(gamePath=gamePath))
+    print('System: {system}'.format(system=system))
+    print('Game: {game}'.format(game=game))
+    print('Extension: {ext}'.format(ext=extension))
 
+    command += ' ~/Games/roms/{system}/{game}/{game}{ext}'.format(
+        system=system,
+        game=game,
+        ext=extension
+    )
+
+
+# next line is for debugging
+print('Command: {command}'.format(command=command))
+
+
+# run command and play!
+os.system(command)
 
 # exit program
 sys.exit(0)
