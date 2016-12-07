@@ -23,7 +23,7 @@ systems = os.listdir('{home}/Games/roms/'.format(home=home))
 # OpenEmu does not emulate the user-specified console
 openEmuFlag = False
 
-# if input error
+# play only takes 2 or 3 arguments
 if len(sys.argv) not in range(2, 4):
     showHelp()
     sys.exit(0)
@@ -33,14 +33,12 @@ if len(sys.argv) not in range(2, 4):
 
 '''                                 PART I
                                 help, or show
-'''
 
 
 
 
 
-
-''' PLAY SHOW'''
+    PLAY SHOW'''
 
 # user is asking to see something
 if sys.argv[1].lower() == 'show':
@@ -195,8 +193,10 @@ else:
 # run this only if a second argument (game) is specified
 if len(sys.argv) == 3:
 
-    game = sys.argv[2].lower()
 
+    # figure out the game user wants to play
+
+    game = sys.argv[2].lower()
     # create game filepath from user input
     gamePath = '{home}/Games/roms/{system}/{game}/'.format(
         home=home,
@@ -204,14 +204,17 @@ if len(sys.argv) == 3:
         game=game
     )
 
+
     # if the game doesn't exist, throw an error
+
     if not os.path.isdir(gamePath):
         print('\nCannot find the game {game}.\nIt\'s possible the game folders have not been renamed.\n'.format(
             game=game
         ))
         sys.exit(1)
 
-    # find the extension
+    # find the extension for parsing the games directory
+
     for i in os.listdir(gamePath):
         for ext in extensionDict[system]:
             # this part will only work if game files
@@ -224,6 +227,8 @@ if len(sys.argv) == 3:
                 ))
                 sys.exit(1)
 
+
+    # add game filepath to the command
     command += ' {home}/Games/roms/{system}/{game}/{game}{ext}'.format(
         home=home,
         system=system,
