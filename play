@@ -3,9 +3,9 @@
 
 '''''''''''''''''''''''''''''''''''''''''''''
 #                DOC HAIKU                  #
-#          calling wine is dumb             #
+#          typing stuff is dumb             #
 #       run this here program instead       #
-#        save yer fingerstrength            #
+#         save yer fingerstrength           #
 #                                           #
 '''''''''''''''''''''''''''''''''''''''''''''
 
@@ -233,7 +233,7 @@ if len(sys.argv) == 3:
 
 
 # next line is for debugging
-print('Command: {command}'.format(command=command))
+# print('Command: {command}'.format(command=command))
 
 
 # run command and play!
