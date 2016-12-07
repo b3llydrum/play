@@ -93,7 +93,7 @@ for i in range(len(gameList)):
                 folderName=gameList[i]
                 ))
         else:
-            os.system('sudo cp -R {gameFolderPath}\"{folderName}\"/ {newFolderName}'.format(
+            os.system('sudo cp -R {gameFolderPath}\"{folderName}\"/ {gameFolderPath}{newFolderName}'.format(
                 gameFolderPath=gameFolderPath,
                 folderName=gameList[i],
                 newFolderName=newFolderName

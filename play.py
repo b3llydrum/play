@@ -215,17 +215,22 @@ if len(sys.argv) == 3:
 
     # find the extension for parsing the games directory
 
+    extension = 'NULL'
+
     for i in os.listdir(gamePath):
+        print(i)
         for ext in extensionDict[system]:
             # this part will only work if game files
             # have the same name as their containing folder
             if i == '{game}{ext}'.format(game=game, ext=ext):
                 extension = ext
-            else:
-                print('\nCannot find the game {game}.\nIt\'s possible the filename has not yet been formatted.\n'.format(
-                    game=game
-                ))
-                sys.exit(1)
+                continue
+
+    if extension == 'NULL':
+        print('\nCannot find the game {game}.\nIt\'s possible the filename has not yet been formatted.\n'.format(
+            game=game
+        ))
+        sys.exit(1)
 
 
     # add game filepath to the command
@@ -238,7 +243,7 @@ if len(sys.argv) == 3:
 
 
 # next line is for debugging
-# print('Command: {command}'.format(command=command))
+print('Command: {command}'.format(command=command))
 
 
 # run command and play!

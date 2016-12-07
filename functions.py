@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import os
+import sys
 
 # used in play.py
 
@@ -62,6 +63,10 @@ def rename(folderName):
         folderName=folderName))
 
     answer = input()
+
+    if answer.lower() == 'quit':
+        print('Saving changes and quitting.\n')
+        sys.exit(0)
 
     while answer != 'y' and answer != 'N':
         print('\nNot understood. Would you like to rename {folderName}?\n'.format(

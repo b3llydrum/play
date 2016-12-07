@@ -18,18 +18,12 @@ from functions import *
 
 
 
-
-
 # try to change directory to rom folder on flash drive
 consolesPath = getConsolesPath()
 
 
-
-
-
-
 # create list of known consoles from rom folder
-consoleList = [system for system in os.listdir(gamesPath) if os.path.isdir(system)]
+consoleList = [system for system in os.listdir(consolesPath)]
 
 
 # print readable string containing every console for user to choose from
@@ -40,9 +34,6 @@ print('\n')
 
 # ask user which console folder they want to clean up
 console = getConsoleFromUser(consoleList)
-
-
-
 
 
 
