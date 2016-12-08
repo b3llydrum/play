@@ -8,9 +8,9 @@ import sys
 def showHelp():
     os.system('clear')
     print('\nUsage:\n')
-    print(' play <emulator>')
+    print(' play <console>')
     print('     - open emulator\n')
-    print(' play <emulator> <game>')
+    print(' play <console> <game>')
     print('     - open game with emulator\n')
     print(' play show consoles')
     print('     - show consoles with available games\n')
@@ -40,6 +40,7 @@ def getConsolesPath():
             home=home
         )
     return consolesPath
+
 
 def getConsoleFromUser(consoleList):
     ''' ask user which console folder they want to clean up '''

@@ -19,12 +19,43 @@ from functions import *
 home = os.path.expanduser('~')
 emulators = os.listdir('{home}/Games/emulators/'.format(home=home))
 systems = os.listdir('{home}/Games/roms/'.format(home=home))
+consolesPath = '{home}/Games/roms/'.format(home=home)
 
 # OpenEmu does not emulate the user-specified console
 openEmuFlag = False
 
 # play only takes 2 or 3 arguments
 if len(sys.argv) not in range(2, 4):
+
+    # if user is specifying a game via OpenEmu
+    if len(sys.argv) == 4:
+        if (sys.argv[1] == 'openemu') and (sys.argv[2] in consoleDict.keys()) and (sys.argv[3].lower() in os.listdir(consolesPath + '{system}/'.format(
+                system=sys.argv[2].lower()))):
+
+            # system = 'nes'
+            system = sys.argv[2].lower()
+            # game = 'contra'
+            game = sys.argv[3].lower()
+            # extension = ''
+            extension = ''
+
+            if system in extensionDict.keys():
+                for ext in extensionDict[system]:
+                    for i in os.listdir(consolesPath + '{system}/{game}'.format(
+                        system=system,
+                        game=game)):
+                        if i.endswith(ext):
+                            extension = ext
+                            command = 'open -a OpenEmu {systems}{system}/{game}/{game}{ext}'.format(
+                                systems=consolesPath,
+                                system=system,
+                                game=game,
+                                ext=extension
+                            )
+                            print('Command = {command}'.format(command=command))
+                            os.system(command)
+                            print('boom bitch!')
+                            sys.exit(0)
     showHelp()
     sys.exit(0)
 
@@ -123,6 +154,7 @@ system = sys.argv[1].lower()
                                           \
                                            \----no---- error -> quit
 '''
+
 
 # find out if user provided a console or an emulator
 isConsole, isEmulator = False, False
