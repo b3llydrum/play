@@ -23,8 +23,6 @@ def showHelp():
 
 
 
-
-
 # used in both replace.py and romcleaner.py
 
 def getConsolesPath():
@@ -37,19 +35,22 @@ def getConsolesPath():
         print('\nCould not find USB. Using local game directory.\n')
         home = os.path.expanduser('~')
         consolesPath = '{home}/Games/roms/'.format(
-            home=home
-        )
+            home=home)
+
+    # ~/Games/roms/
     return consolesPath
 
 
 def getConsoleFromUser(consoleList):
     ''' ask user which console folder they want to clean up '''
+
     console = input('Which consoles folder do you want to clean up?\n').lower()
     while not (console in consoleList):
         print('\n{console} isn\'t found.\n'.format(
-            console=console.title()
-        ))
+            console=console.title()))
         console = input('Which consoles folder do you want to clean up?\n').lower()
+
+    # example: snes
     return console
 
 
@@ -60,6 +61,8 @@ def getConsoleFromUser(consoleList):
 # used in replace.py
 
 def rename(folderName):
+    ''' rename each folder in given directory '''
+
     print('\nThis folder\'s name is {folderName}. Would you like to rename it? (y/N)'.format(
         folderName=folderName))
 

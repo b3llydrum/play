@@ -5,7 +5,7 @@
 #                DOC HAIKU                  #
 #          your folders look gross          #
 #        let me help you rename them        #
-#           isn't that better?              #
+#            isn't that better?             #
 #                                           #
 '''''''''''''''''''''''''''''''''''''''''''''
 

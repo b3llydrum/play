@@ -3,11 +3,23 @@
 
 '''''''''''''''''''''''''''''''''''''''''''''
 #                DOC HAIKU                  #
-#          provides some simple help        #
-#        with renaming all your roms        #
-#           with consistency                #
+#         provides some simple help         #
+#         by renaming all your roms         #
+#            with consistency               #
 #                                           #
 '''''''''''''''''''''''''''''''''''''''''''''
+
+# LOGIC FLOW
+# create destination folders for each flag
+# check filename for patterns
+# flip flags to True if patterns fit
+# create folder for game based on original folder name inside each flag folder
+# copy file into each flag folder
+# once done with every file, rename each file in each folder according to flag
+# if in this folder and in this folder, etc etc etc
+#   prioritize pure files and put back into snes_cleaned folder
+#   then put all region files that arent also in tag or beta
+#   if no files still, put region files that are in tag
 
 
 import re
@@ -18,25 +30,23 @@ from function import *
 
 
 
-# try to change directory to rom folder on flash drive
+# ~/Games/roms/
 consolesPath = getConsolesPath()
 
 
-# create list of known consoles from rom folder
+# every console folder in consolesPath
 consoleList = [system for system in os.listdir(consolesPath)]
 
 
-# print readable string containing every console for user to choose from
+# print every console for user to choose from
 for console in consoleList:
     print(console)
 print('\n')
 
 
 # ask user which console folder they want to clean up
+# snes
 console = getConsoleFromUser(consoleList)
-
-
-
 
 
 
@@ -48,7 +58,7 @@ console = getConsoleFromUser(consoleList)
 # create backup folder for uncleaned console folder
 
 
-print('Copying into backup folder for safety...')                       # Copying into backup folder for safety...
+print('Copying into backup folder for safety...')
 
 # first delete any existing backup folder
 if os.path.exists(console + '_bkp'):
@@ -61,7 +71,14 @@ os.system('sudo cp -R ' + console + '/ ' + console + '_bkp')
 if os.path.exists(console + '_cleaned'):
     os.system('sudo rm -rf ' + console + '_cleaned')
 os.makedirs(console + '_cleaned')
-print('... and created destination folder for clean files.\n')          # ... and created destination folder for clean files.
+print('... and created destination folder for clean files.\n')
+
+
+
+
+
+
+
 
 
 # switch to backup console folder
@@ -97,12 +114,6 @@ regionPattern = re.compile(r'\([E|U|G|J]')
 
 # create regex object to match filenames with [!] type tags
 definitivePattern = re.compile(r'\[!\]')
-
-
-# string.index(str, beg=0 end=len(string))
-
-
-
 
 
 
@@ -172,7 +183,7 @@ for folder in os.listdir('.'):
 
             # filter html files and DESTORY THEM
             if file.endswith('htm') or file.endswith('.html'):
-                os.system('sudo rm ' + folder + '/' + file)
+                os.system('sudo rm {folder}/'.format(folder=folder) + file)
 
 
                 ''' the following switches the flags initialized above depending on the filename  '''
@@ -218,9 +229,9 @@ for folder in os.listdir('.'):
 
         # when done checking all the files in a games folder:
 
-        # CREATE NEW FOLDER FOR EACH GAME                                               # THIS WHOLE SECTION NEEDS TO BE RE-HARDCODED
+        # CREATE NEW FOLDER FOR EACH GAME
 
-
+        # THIS WHOLE SECTION IS HARD-CODED FOR SNES
 
 
         # PRIORITIZE PURE FILES. IF THERE'S A PURIFIED FILE, COPY IT OVER
