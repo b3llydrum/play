@@ -28,6 +28,7 @@ openEmuFlag = False
 if len(sys.argv) not in range(2, 4):
 
     # if user is specifying a game via OpenEmu
+    # this was a late addition so it's gross and messy
     if len(sys.argv) == 4:
         if (sys.argv[1] == 'openemu') and (sys.argv[2] in consoleDict.keys()) and (sys.argv[3].lower() in os.listdir(consolesPath + '{system}/'.format(
                 system=sys.argv[2].lower()))):
@@ -50,11 +51,8 @@ if len(sys.argv) not in range(2, 4):
                                 systems=consolesPath,
                                 system=system,
                                 game=game,
-                                ext=extension
-                            )
-                            print('Command = {command}'.format(command=command))
+                                ext=extension)
                             os.system(command)
-                            print('boom bitch!')
                             sys.exit(0)
     showHelp()
     sys.exit(0)
@@ -94,12 +92,10 @@ if sys.argv[1].lower() == 'show':
     if system in systems:
         os.system('clear')
         print('\nHere are the games available for {system}:\n'.format(
-            system=system
-        ))
+            system=system))
         for game in os.listdir('{home}/Games/roms/{system}/'.format(
             home=home,
-            system=system
-        )):
+            system=system)):
             print(game.lower())
 
     # show consoles if user asks
@@ -107,8 +103,7 @@ if sys.argv[1].lower() == 'show':
         os.system('clear')
         print('\nHere are the consoles with games available:\n')
         for console in os.listdir('{home}/Games/roms/'.format(
-            home=home
-        )):
+            home=home)):
             print(console.lower())
 
     # show emulators if user asks
@@ -179,8 +174,7 @@ if not isConsole:
     # if not a console or an emulator, return an error and quit
     if not isEmulator:
         print('Console or emulator \'{system}\' not understood.'.format(
-            system=system
-        ))
+            system=system))
         sys.exit(1)
 
 
@@ -202,12 +196,10 @@ if isConsole:
 elif isEmulator:
     if system in wineList:
         command = 'wine ~/Games/emulators/{system}/{system}.exe'.format(
-            system=system
-            )
+            system=system)
     elif system in osxList:
         command = 'open -a {system}'.format(
-            system=system
-        )
+            system=system)
 else:
     print('There has been an error.\nSystem check is leaking.')
     sys.exit(2)
@@ -233,16 +225,14 @@ if len(sys.argv) == 3:
     gamePath = '{home}/Games/roms/{system}/{game}/'.format(
         home=home,
         system=system,
-        game=game
-    )
+        game=game)
 
 
     # if the game doesn't exist, throw an error
 
     if not os.path.isdir(gamePath):
         print('\nCannot find the game {game}.\nIt\'s possible the game folders have not been renamed.\n'.format(
-            game=game
-        ))
+            game=game))
         sys.exit(1)
 
     # find the extension for parsing the games directory
@@ -260,8 +250,7 @@ if len(sys.argv) == 3:
 
     if extension == 'NULL':
         print('\nCannot find the game {game}.\nIt\'s possible the filename has not yet been formatted.\n'.format(
-            game=game
-        ))
+            game=game))
         sys.exit(1)
 
 
@@ -270,12 +259,11 @@ if len(sys.argv) == 3:
         home=home,
         system=system,
         game=game,
-        ext=extension
-    )
+        ext=extension)
 
 
 # next line is for debugging
-print('Command: {command}'.format(command=command))
+# print('Command: {command}'.format(command=command))
 
 
 # run command and play!
