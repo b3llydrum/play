@@ -3,25 +3,6 @@
 import os
 import sys
 
-# used in play.py
-
-def showHelp():
-    os.system('clear')
-    print('\nUsage:\n')
-    print(' play <console>')
-    print('     - open emulator\n')
-    print(' play <console> <game>')
-    print('     - open game with emulator\n')
-    print(' play show consoles')
-    print('     - show consoles with available games\n')
-    print(' play show emulators')
-    print('     - show emulators available for use\n')
-    print(' play show <console>')
-    print('     - show games available from specific console')
-    print('\n')
-
-
-
 
 # used in both replace.py and romcleaner.py
 
@@ -90,3 +71,19 @@ def verifyRename(newFolderName):
         ))
     answer = input()
     return answer
+
+
+def showHelp():
+    os.system('clear')
+    print('\nUsage:\n')
+    print(' play <console>')
+    print('     - open emulator\n')
+    print(' play <console> <game>')
+    print('     - open game with emulator\n')
+    print(' play show consoles')
+    print('     - show consoles with available games\n')
+    print(' play show emulators')
+    print('     - show emulators available for use\n')
+    print(' play show <console>')
+    print('     - show games available from specific console')
+    print('\n')

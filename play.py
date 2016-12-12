@@ -1,5 +1,8 @@
 #! /usr/bin/env python3
 
+# TODO: if changing functionality to replace /console with /console_cleaned,
+#     first make console get replaced with console_cleaned
+#     the ctrl + f 'console with cleaned' and change those lines
 
 '''''''''''''''''''''''''''''''''''''''''''''
 #                DOC HAIKU                  #
@@ -24,25 +27,26 @@ consolesPath = '{home}/Games/roms/'.format(home=home)
 # OpenEmu does not emulate the user-specified console
 openEmuFlag = False
 
-# play only takes 2 or 3 arguments
-if len(sys.argv) not in range(2, 4):
+
+
 
     # if user is specifying a game via OpenEmu
     # this was a late addition so it's gross and messy
     if len(sys.argv) == 4:
-        if (sys.argv[1] == 'openemu') and (sys.argv[2] in consoleDict.keys()) and (sys.argv[3].lower() in os.listdir(consolesPath + '{system}/'.format(
-                system=sys.argv[2].lower()))):
+        if (sys.argv[1] == 'openemu') and (sys.argv[2] in consoleDict.keys()) and (sys.argv[3].lower() in os.listdir(consolesPath + '{system}_cleaned/'.format(
+                system=sys.argv[2].lower()))):  # change this line if replace with cleaned
 
             # system = 'nes'
-            system = sys.argv[2].lower()
+            system = sys.argv[2].lower() + '_cleaned'  # change this line if replace with cleaned
             # game = 'contra'
             game = sys.argv[3].lower()
             # extension = ''
             extension = ''
 
-            if system in extensionDict.keys():
-                for ext in extensionDict[system]:
-                    for i in os.listdir(consolesPath + '{system}/{game}'.format(
+
+            if system[:len(system) - len('_cleaned')] in extensionDict.keys():  # change this line if replace with cleaned
+                for ext in extensionDict[system[:len(system) - len('_cleaned')]]:  # change this line if replace with cleaned
+                    for i in os.listdir(consolesPath + '{system}/{game}'.format(  # change this line if replace with cleaned
                         system=system,
                         game=game)):
                         if i.endswith(ext):
@@ -93,7 +97,7 @@ if sys.argv[1].lower() == 'show':
         os.system('clear')
         print('\nHere are the games available for {system}:\n'.format(
             system=system))
-        for game in os.listdir('{home}/Games/roms/{system}/'.format(
+        for game in os.listdir('{home}/Games/roms/{system}_cleaned/'.format(  # change this when console with cleaned
             home=home,
             system=system)):
             print(game.lower())
@@ -222,7 +226,7 @@ if len(sys.argv) == 3:
 
     game = sys.argv[2].lower()
     # create game filepath from user input
-    gamePath = '{home}/Games/roms/{system}/{game}/'.format(
+    gamePath = '{home}/Games/roms/{system}_cleaned/{game}/'.format(  # change this line if replace with cleaned
         home=home,
         system=system,
         game=game)
@@ -238,6 +242,7 @@ if len(sys.argv) == 3:
     # find the extension for parsing the games directory
 
     extension = 'NULL'
+    print(gamePath)
 
     for i in os.listdir(gamePath):
         print(i)
@@ -255,7 +260,7 @@ if len(sys.argv) == 3:
 
 
     # add game filepath to the command
-    command += ' {home}/Games/roms/{system}/{game}/{game}{ext}'.format(
+    command += ' ' + gamePath + '{game}{ext}'.format(
         home=home,
         system=system,
         game=game,
@@ -263,7 +268,7 @@ if len(sys.argv) == 3:
 
 
 # next line is for debugging
-# print('Command: {command}'.format(command=command))
+print('Command: {command}'.format(command=command))
 
 
 # run command and play!
