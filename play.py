@@ -13,6 +13,22 @@
 '''''''''''''''''''''''''''''''''''''''''''''
 
 
+# 1. Checks if just '>> play'
+# 2. Checks if '>> play <__> <__> <__>'
+#    - must be 'play emulator console game'
+# 3. Checks if '>> play <__> <__>'
+#    - could be 'play console game'
+#    - could be 'play show <__>'
+#    - could be 'play help'
+
+
+
+
+
+
+
+
+
 import os
 import sys
 from data import *

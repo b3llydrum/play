@@ -26,7 +26,10 @@ import re
 import os
 import shutil
 import sys
+import time
+from data import *
 from functions import *
+from patterns import *
 
 
 
@@ -44,9 +47,12 @@ for console in consoleList:
 print('\n')
 
 
+
 # ask user which console folder they want to clean up
 # snes
 console = getConsoleFromUser(consoleList)
+extension = extensionDict[console][0]
+
 
 # change directory to the parent of console
 os.chdir(consolesPath)
@@ -60,25 +66,25 @@ os.chdir(consolesPath)
 
 # create backup folder for uncleaned console folder
 
-
-print('Copying into backup folder for safety...')
-
-
 # first delete any existing backup folder
 if os.path.exists(console + '_working'):
+    print('\nDeleting current {console}_working/ folder...'.format(console=console))
     os.system('sudo rm -rf ' + console + '_working')
 
 
 # then copy console folder into backup folder
 os.makedirs(console + '_working')
+print('Creating new {console}_working/ folder...'.format(console=console))
 os.system('sudo cp -R ' + console + '/ ' + console + '_working')
 
 
 # create destination folder
 if os.path.exists(console + '_cleaned'):
+    print('\nDeleting current {console}_cleaned/ folder...'.format(console=console))
     os.system('sudo rm -rf ' + console + '_cleaned')
+print('... and creating new {console}_cleaned/ folder as destination.\n'.format(console=console))
 os.makedirs(console + '_cleaned')
-print('... and created destination folder for clean files.\n')
+time.sleep(1)
 
 
 # and at the end, replace the original console folder with the _cleaned folder
@@ -87,71 +93,43 @@ print('... and created destination folder for clean files.\n')
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+''' this next part looks through the game folders and organizes the game files '''
+
+
+
+
 # switch to backup console folder
 os.chdir(console + '_working')
+print('Moved to {console}_working/ folder to do operations.'.format(console=console))
+time.sleep(2)
 
 
 
+# data imported from patterns.py
 
 
-''' initialize stuff for the cleaning process '''
-
-
-
-buffer_file = ''
-
-regions = ['U', 'J', 'E', 'G']
-
-# create regex object to match filenames with no tags
-# Sim Ant.smc
-purePattern = re.compile(r'[^\]][^\)]\.(smc|sfc)')
-
-# create regex object to match filenames with [tag1] type tags
-# Lagoon (U) [b1].smc
-tagPattern = re.compile(r'\[([a-z])+')
-
-# create regex object to match filenames with (U) type region tags
-# Rockman X (J) (V1.0) [f1].smc
-regionPattern = re.compile(r'\([E|U|G|J]')
-
-# create regex object to match filenames with [!] type tags
-# Donkey Kong Country (U) (V1.2) [!].smc
-definitivePattern = re.compile(r'\[!\]')
-
-
-
-
-'''
-if there is a pure file:
-    return file
-
-
-for file in folder:
-    if file in regionList and file not in betaList and file not in tagList:
-        if '__u' in file:
-            return file
-        elif '__e' in file:
-            return file
-        elif '__e' in file:
-            return file
-        else:
-            return file
-
-for file in folder:
-    if file in regionList and file not in betaList:
-        if '(U)' in file:
-            return file
-        elif '(E)' in file:
-            return file
-        elif '(J)' in file:
-            return file
-        else:
-            return file
-
-
-
-
-'''
 
 
 # for each game:
@@ -277,7 +255,6 @@ for folder in os.listdir('.'):
         #print('Here\'s all the pure stuff:')
         # if there is anything in pureFiles, create a folder for the game in *_new and plop it in there
 
-        print(console + '   yay')
         if len(pureFiles) > 0:
             '''
             print('Here are all the pure files for ' + folder)
@@ -307,7 +284,6 @@ for folder in os.listdir('.'):
             #print('Created ../snes_new/' + title[:-4] + '/' + title + '')
         else:
             print('No pure file.')
-
 
 
 
@@ -390,76 +366,3 @@ for folder in os.listdir('.'):
 
         print('\n')
         gameTitle = ''.join(gameTitle)
-
-'''
-
-        if len(pureFiles) > 0 and len(definitiveFiles) > 0 and len(regionFiles) > 0:
-            try:
-                os.makedirs('../' + console.lower() + '_new' + '/' + gameTitle)
-                print('\nCreated new folder titled ' + gameTitle)
-            except FileExistsError:
-                print('Folder ' + gameTitle + ' already exists.')
-        else:
-            pass
-
-
-
-        # START COPYING FILES HERE
-
-        # if we have a pure copy, choose it and only it as the English ROM
-        if len(pureFiles) > 0:
-            try:
-                shutil.copyfile(folder + '/' + pureFiles[0], '../' + console.lower() + '_new' + '/' + gameTitle + '/' + gameTitle)
-            except FileExistsError:
-                print('File ' + gameTitle + ' already exists.')
-            except FileNotFoundError:
-                print('File ' + gameTitle + ' not found.')
-            except IsADirectoryError:
-                print(gameTitle + ' is already a directory.')
-            except shutil.SameFileError:
-                print('Same file.')
-
-        # ...but if we don't have a definitive copy, choose one (U) ROM to be our English ROM
-        elif len(definitiveFiles) > 0:
-            for game in definitiveFiles:
-                if '(U)' in game and game not in tagFiles and game not in betaFiles:
-                    game = game[:-4]
-                    try:
-                        shutil.copyfile(folder + '/' + game, '../' + console.lower() + '_new' + '/' + gameTitle + '/' + game)
-                    except FileExistsError:
-                        print('File ' + game + ' already exists.')
-                    except FileNotFoundError:
-                        print('File ' + game + ' not found.')
-                    except shutil.SameFileError:
-                        print('Same file.')
-
-        # if there is a (J) file, copy it over as well
-        if len(regionFiles) > 0:
-            for game in regionFiles:
-                if '(J)' in game and game not in tagFiles and game not in betaFiles:
-                    game = game[:-4]
-                    try:
-                        shutil.copyfile(folder + '/' + game, '../' + console.lower() + '_new' + '/' + gameTitle + '/' + game)
-                        break
-                    except FileExistsError:
-                        print('File ' + game + ' already exists.')
-                    except FileNotFoundError:
-                        print('File ' + game + ' not found.')
-                    except shutil.SameFileError:
-                        print('Same file.')
-
-        # put betas over too
-        if len(betaFiles) > 0:
-            game = betaFiles[0]
-            if game in tagFiles:
-                index = game.index('[')
-                game = game[:index - 1]
-            try:
-                shutil.copyfile(folder + '/' + betaFiles[0], '../' + console.lower() + '_new' + '/' + gameTitle + '/' + game)
-            except FileExistsError:
-                print('File ' + game + ' already exists.')
-            except FileNotFoundError:
-                print('File ' + game + ' not found.')
-            except shutil.SameFileError:
-                print('Same file.')
-'''

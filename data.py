@@ -19,8 +19,8 @@ extensionDict = {
     'gameboy_color' : ['.gbc'],
     'gameboy_advance' : ['.gba'],
     'nes' : ['.nes'],
-    'snes' : ['.sfc',
-              '.smc'
+    'snes' : ['.smc',
+              '.sfc'
               ],
 }
 
