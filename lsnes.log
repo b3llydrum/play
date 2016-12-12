@@ -496,3 +496,246 @@ joystick0button3 bound (button) to +controller gamepad-1-X
 joystick0button5 bound (button) to +controller gamepad-1-R
 joystick0button4 bound (button) to +controller gamepad-1-L
 --- End running lsnesrc --- 
+-----------------------------------------------------------------------
+lsnes started at 2016-12-11 23:58:06 Central Standard Time
+-----------------------------------------------------------------------
+Detected 10 sound devices.
+Audio device 0: Wine Sound Mapper - Input
+Audio device 1: Built-in Microphone
+Audio device 2: Wine Sound Mapper - Output
+Audio device 3: Built-in Output
+Audio device 4: Primary Sound Driver
+Audio device 5: Built-in Microphone
+Audio device 6: Primary Sound Driver
+Audio device 7: Built-in Output
+Audio device 8: Built-in Microphone
+Audio device 9: Built-in Output
+Portaudio: Output: 44100Hz Stereo on 'Wine Sound Mapper - Output
+Portaudio: Input: 44100Hz Stereo on 'Wine Sound Mapper - Input
+Joystick #0 online: SNES PC Game Pad   
+lsnes version: lsnes rr2-β23
+Can't read directory 'C:\users\davidmaness\Application Data/lsnes/autoload'
+Can't read directory 'Z:\Users\davidmaness\Games\emulators\lsnes/plugins'
+Saving per-user data to: C:\users\davidmaness\Application Data/lsnes
+--- Loading configuration --- 
+Setting advance-subframe-timeout set to 100
+Setting advance-timeout set to 500
+Setting avi-bottom-border set to 0
+Setting avi-cscd-compression set to 7
+Setting avi-cscd-keyint set to 0
+Setting avi-large set to no
+Setting avi-left-border set to 0
+Setting avi-maxframes set to 0
+Setting avi-right-border set to 0
+Setting avi-soundrate set to High quality 48kHz
+Setting avi-top-border set to 0
+Setting avi-tscc-compression set to 7
+Setting avi-tscc-keyint set to 299
+Setting avi-xfactor set to 0
+Setting avi-yfactor set to 0
+Setting avi-zmbv-blockh set to 16
+Setting avi-zmbv-blockw set to 16
+Setting avi-zmbv-compression set to 7
+Setting avi-zmbv-fullsearch set to no
+Setting avi-zmbv-keyint set to 299
+Setting bottom-border set to 0
+Setting dont-check-savestate set to no
+Setting firmwarepath set to 
+Setting jmd-compression set to 7
+Setting jukebox-default-binary set to yes
+Setting jukebox-size set to 12
+Setting left-border set to 0
+Setting lua-maxmem set to 128
+Setting movie-default-binary set to no
+Setting moviepath set to 
+Setting opus-bitrate set to 48000
+Setting opus-max-bitrate set to 255000
+Setting pause-on-end set to no
+Setting preserve_on_readonly_load set to yes
+Setting right-border set to 0
+Setting rompath set to 
+Setting savecompression set to 7
+Setting savestate-default-binary set to no
+Setting slotpath set to 
+Setting top-border set to 0
+space bound to 'pause-emulator'
+shift bound to 'reset'
+right bound to '+advance-frame'
+joystick0axis1- bound (button) to +controller gamepad-1-up
+joystick0button0 bound (button) to +controller gamepad-1-B
+joystick0button6 bound (button) to +controller gamepad-1-select
+joystick0button7 bound (button) to +controller gamepad-1-start
+joystick0button2 bound (button) to +controller gamepad-1-Y
+joystick0axis1+ bound (button) to +controller gamepad-1-down
+joystick0axis0- bound (button) to +controller gamepad-1-left
+joystick0axis0+ bound (button) to +controller gamepad-1-right
+joystick0button1 bound (button) to +controller gamepad-1-A
+joystick0button3 bound (button) to +controller gamepad-1-X
+joystick0button5 bound (button) to +controller gamepad-1-R
+joystick0button4 bound (button) to +controller gamepad-1-L
+--- End running lsnesrc --- 
+Using core: null core
+Rerecords 0 length 00:00.000 (0 frames)
+Sound output closed.
+Sound input closed.
+-----------------------------------------------------------------------
+lsnes shutting down at 2016-12-11 23:58:18 Central Standard Time
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+lsnes started at 2016-12-11 23:58:38 Central Standard Time
+-----------------------------------------------------------------------
+Detected 10 sound devices.
+Audio device 0: Wine Sound Mapper - Input
+Audio device 1: Built-in Microphone
+Audio device 2: Wine Sound Mapper - Output
+Audio device 3: Built-in Output
+Audio device 4: Primary Sound Driver
+Audio device 5: Built-in Microphone
+Audio device 6: Primary Sound Driver
+Audio device 7: Built-in Output
+Audio device 8: Built-in Microphone
+Audio device 9: Built-in Output
+Portaudio: Output: 44100Hz Stereo on 'Wine Sound Mapper - Output
+Portaudio: Input: 44100Hz Stereo on 'Wine Sound Mapper - Input
+Joystick #0 online: SNES PC Game Pad   
+lsnes version: lsnes rr2-β23
+Can't read directory 'C:\users\davidmaness\Application Data/lsnes/autoload'
+Can't read directory 'Z:\Users\davidmaness\Games\emulators\lsnes/plugins'
+Saving per-user data to: C:\users\davidmaness\Application Data/lsnes
+--- Loading configuration --- 
+Setting advance-subframe-timeout set to 100
+Setting advance-timeout set to 500
+Setting avi-bottom-border set to 0
+Setting avi-cscd-compression set to 7
+Setting avi-cscd-keyint set to 0
+Setting avi-large set to no
+Setting avi-left-border set to 0
+Setting avi-maxframes set to 0
+Setting avi-right-border set to 0
+Setting avi-soundrate set to High quality 48kHz
+Setting avi-top-border set to 0
+Setting avi-tscc-compression set to 7
+Setting avi-tscc-keyint set to 299
+Setting avi-xfactor set to 0
+Setting avi-yfactor set to 0
+Setting avi-zmbv-blockh set to 16
+Setting avi-zmbv-blockw set to 16
+Setting avi-zmbv-compression set to 7
+Setting avi-zmbv-fullsearch set to no
+Setting avi-zmbv-keyint set to 299
+Setting bottom-border set to 0
+Setting dont-check-savestate set to no
+Setting firmwarepath set to 
+Setting jmd-compression set to 7
+Setting jukebox-default-binary set to yes
+Setting jukebox-size set to 12
+Setting left-border set to 0
+Setting lua-maxmem set to 128
+Setting movie-default-binary set to no
+Setting moviepath set to 
+Setting opus-bitrate set to 48000
+Setting opus-max-bitrate set to 255000
+Setting pause-on-end set to no
+Setting preserve_on_readonly_load set to yes
+Setting right-border set to 0
+Setting rompath set to 
+Setting savecompression set to 7
+Setting savestate-default-binary set to no
+Setting slotpath set to 
+Setting top-border set to 0
+space bound to 'pause-emulator'
+shift bound to 'reset'
+right bound to '+advance-frame'
+joystick0button7 bound (button) to +controller gamepad-1-start
+joystick0button0 bound (button) to +controller gamepad-1-B
+joystick0button6 bound (button) to +controller gamepad-1-select
+joystick0button2 bound (button) to +controller gamepad-1-Y
+joystick0axis1- bound (button) to +controller gamepad-1-up
+joystick0axis1+ bound (button) to +controller gamepad-1-down
+joystick0axis0- bound (button) to +controller gamepad-1-left
+joystick0axis0+ bound (button) to +controller gamepad-1-right
+joystick0button1 bound (button) to +controller gamepad-1-A
+joystick0button3 bound (button) to +controller gamepad-1-X
+joystick0button4 bound (button) to +controller gamepad-1-L
+joystick0button5 bound (button) to +controller gamepad-1-R
+--- End running lsnesrc --- 
+-----------------------------------------------------------------------
+lsnes started at 2016-12-12 00:00:41 Central Standard Time
+-----------------------------------------------------------------------
+Detected 10 sound devices.
+Audio device 0: Wine Sound Mapper - Input
+Audio device 1: Built-in Microphone
+Audio device 2: Wine Sound Mapper - Output
+Audio device 3: Built-in Output
+Audio device 4: Primary Sound Driver
+Audio device 5: Built-in Microphone
+Audio device 6: Primary Sound Driver
+Audio device 7: Built-in Output
+Audio device 8: Built-in Microphone
+Audio device 9: Built-in Output
+Portaudio: Output: 44100Hz Stereo on 'Wine Sound Mapper - Output
+Portaudio: Input: 44100Hz Stereo on 'Wine Sound Mapper - Input
+Joystick #0 online: SNES PC Game Pad   
+lsnes version: lsnes rr2-β23
+Can't read directory 'C:\users\davidmaness\Application Data/lsnes/autoload'
+Can't read directory 'Z:\Users\davidmaness\Games\emulators\lsnes/plugins'
+Saving per-user data to: C:\users\davidmaness\Application Data/lsnes
+--- Loading configuration --- 
+Setting advance-subframe-timeout set to 100
+Setting advance-timeout set to 500
+Setting avi-bottom-border set to 0
+Setting avi-cscd-compression set to 7
+Setting avi-cscd-keyint set to 0
+Setting avi-large set to no
+Setting avi-left-border set to 0
+Setting avi-maxframes set to 0
+Setting avi-right-border set to 0
+Setting avi-soundrate set to High quality 48kHz
+Setting avi-top-border set to 0
+Setting avi-tscc-compression set to 7
+Setting avi-tscc-keyint set to 299
+Setting avi-xfactor set to 0
+Setting avi-yfactor set to 0
+Setting avi-zmbv-blockh set to 16
+Setting avi-zmbv-blockw set to 16
+Setting avi-zmbv-compression set to 7
+Setting avi-zmbv-fullsearch set to no
+Setting avi-zmbv-keyint set to 299
+Setting bottom-border set to 0
+Setting dont-check-savestate set to no
+Setting firmwarepath set to 
+Setting jmd-compression set to 7
+Setting jukebox-default-binary set to yes
+Setting jukebox-size set to 12
+Setting left-border set to 0
+Setting lua-maxmem set to 128
+Setting movie-default-binary set to no
+Setting moviepath set to 
+Setting opus-bitrate set to 48000
+Setting opus-max-bitrate set to 255000
+Setting pause-on-end set to no
+Setting preserve_on_readonly_load set to yes
+Setting right-border set to 0
+Setting rompath set to 
+Setting savecompression set to 7
+Setting savestate-default-binary set to no
+Setting slotpath set to 
+Setting top-border set to 0
+space bound to 'pause-emulator'
+shift bound to 'reset'
+right bound to '+advance-frame'
+joystick0button7 bound (button) to +controller gamepad-1-start
+joystick0button0 bound (button) to +controller gamepad-1-B
+joystick0button6 bound (button) to +controller gamepad-1-select
+joystick0button2 bound (button) to +controller gamepad-1-Y
+joystick0axis1- bound (button) to +controller gamepad-1-up
+joystick0axis1+ bound (button) to +controller gamepad-1-down
+joystick0axis0- bound (button) to +controller gamepad-1-left
+joystick0axis0+ bound (button) to +controller gamepad-1-right
+joystick0button1 bound (button) to +controller gamepad-1-A
+joystick0button3 bound (button) to +controller gamepad-1-X
+joystick0button4 bound (button) to +controller gamepad-1-L
+joystick0button5 bound (button) to +controller gamepad-1-R
+--- End running lsnesrc --- 
+Using core: null core
+Rerecords 0 length 00:00.000 (0 frames)

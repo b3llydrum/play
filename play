@@ -18,11 +18,13 @@ import sys
 from data import *
 from functions import *
 
+
 # initialize directories to be used by play.py
 home = os.path.expanduser('~')
-emulators = os.listdir('{home}/Games/emulators/'.format(home=home))
-systems = os.listdir('{home}/Games/roms/'.format(home=home))
-consolesPath = '{home}/Games/roms/'.format(home=home)
+emulators = os.listdir('{home}/Games/emulators'.format(home=home))
+systems = os.listdir('{home}/Games/roms'.format(home=home))
+emulatorsPath = '{home}/Games/emulators'.format(home=home)
+consolesPath = '{home}/Games/roms'.format(home=home)
 
 # OpenEmu does not emulate the user-specified console
 openEmuFlag = False
@@ -30,35 +32,58 @@ openEmuFlag = False
 
 
 
-    # if user is specifying a game via OpenEmu
-    # this was a late addition so it's gross and messy
-    if len(sys.argv) == 4:
-        if (sys.argv[1] == 'openemu') and (sys.argv[2] in consoleDict.keys()) and (sys.argv[3].lower() in os.listdir(consolesPath + '{system}_cleaned/'.format(
-                system=sys.argv[2].lower()))):  # change this line if replace with cleaned
 
-            # system = 'nes'
-            system = sys.argv[2].lower() + '_cleaned'  # change this line if replace with cleaned
-            # game = 'contra'
-            game = sys.argv[3].lower()
-            # extension = ''
-            extension = ''
-
-
-            if system[:len(system) - len('_cleaned')] in extensionDict.keys():  # change this line if replace with cleaned
-                for ext in extensionDict[system[:len(system) - len('_cleaned')]]:  # change this line if replace with cleaned
-                    for i in os.listdir(consolesPath + '{system}/{game}'.format(  # change this line if replace with cleaned
-                        system=system,
-                        game=game)):
-                        if i.endswith(ext):
-                            extension = ext
-                            command = 'open -a OpenEmu {systems}{system}/{game}/{game}{ext}'.format(
-                                systems=consolesPath,
-                                system=system,
-                                game=game,
-                                ext=extension)
-                            os.system(command)
-                            sys.exit(0)
+# if running with 1 argument
+if len(sys.argv) == 1 or len(sys.argv) > 4:
     showHelp()
+    sys.exit(0)
+
+
+
+# if play <emulator> <console> <game>
+if len(sys.argv) == 4:
+
+    # flags for checking if everything is correct
+    emulator, console, gameFolder, gameFile = False, False, False, False
+
+    # assign user-specified emulator to variable
+    for key, value in emulatorDict.items():
+        if sys.argv[1].lower() in value:
+            emulator = key
+
+    # assign user-specified console to variable
+    for key, value in consoleDict.items():
+        if sys.argv[2].lower() in value:
+            console = sys.argv[2]
+
+    # assign user-specified game to variable
+    if console:
+        for folder in os.listdir(consolesPath + '/' + console):
+            if sys.argv[3].lower() == folder:
+                gameFolder = sys.argv[3].lower()
+                for extensionList in extensionDict.values():
+                    for extension in extensionList:
+                        if gameFolder + extension in os.listdir(consolesPath + '/' + console + '_cleaned/' + gameFolder):
+                            gameFile = gameFolder + extension
+
+
+    if not emulator or not console or not gameFolder or not gameFile:
+        showHelp()
+        sys.exit(0)
+
+    if emulator == 'OpenEmu':
+        command = 'open -a OpenEmu {consolesPath}/{gameFolder}/{gameFile}'.format(
+            consolesPath=consolesPath,
+            gameFolder=gameFolder,
+            gameFile=gameFile)
+    else:
+        command = 'wine {emulatorsPath}/{emulator}/{emulator}.exe'.format(
+            emulatorsPath=emulatorsPath,
+            emulator=emulator)
+
+    print(command)
+    os.system(command)
+
     sys.exit(0)
 
 
@@ -128,10 +153,6 @@ if sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].
     showHelp()
     sys.exit(0)
 
-# if first argument isn't show or help, assign it to system
-system = sys.argv[1].lower()
-
-
 
 
 
@@ -155,6 +176,11 @@ system = sys.argv[1].lower()
 '''
 
 
+
+
+# if first argument isn't show or help, assign it to system
+system = sys.argv[1].lower()
+
 # find out if user provided a console or an emulator
 isConsole, isEmulator = False, False
 
@@ -163,16 +189,18 @@ for key, value in consoleDict.items():
     if system in value:
         system = key
         # check emulators for console
-        for key, value in emulatorConsoleDict.items():
-            if system in value:
-                emulator = key
+        if system in openEmuList:
+            emulator = 'OpenEmu'
+        else:
+            for key, value in emulatorConsoleDict.items():
+                if system in value:
+                    emulator = key
         isConsole = True
 
 # if not a console, check all emulators
 if not isConsole:
-    for key, value in emulatorConsoleDict.items():
+    for key in emulatorConsoleDict.keys():
         if system == key.lower():
-            system = key.lower()
             isEmulator = True
 
     # if not a console or an emulator, return an error and quit
@@ -231,6 +259,8 @@ if len(sys.argv) == 3:
         system=system,
         game=game)
 
+    print(gamePath)
+
 
     # if the game doesn't exist, throw an error
 
@@ -245,7 +275,6 @@ if len(sys.argv) == 3:
     print(gamePath)
 
     for i in os.listdir(gamePath):
-        print(i)
         for ext in extensionDict[system]:
             # this part will only work if game files
             # have the same name as their containing folder
