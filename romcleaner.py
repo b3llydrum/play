@@ -29,7 +29,6 @@ import sys
 import time
 from data import *
 from functions import *
-from patterns import *
 
 
 
@@ -49,9 +48,7 @@ print('\n')
 
 
 # ask user which console folder they want to clean up
-# snes
 console = getConsoleFromUser(consoleList)
-extension = extensionDict[console][0]
 
 
 # change directory to the parent of console
@@ -65,6 +62,13 @@ os.chdir(consolesPath)
 
 
 # create backup folder for uncleaned console folder
+
+
+# 1. remove {console}_working/
+# 2. add empty {console}_working/
+# 3. remove {console}_cleaned/
+# 4. add new {console}_cleaned/
+# 5. switch to {console}_working/
 
 # first delete any existing backup folder
 if os.path.exists(console + '_working'):
@@ -87,6 +91,12 @@ os.makedirs(console + '_cleaned')
 time.sleep(1)
 
 
+# switch to backup console folder
+os.chdir(console + '_working')
+print('Moved to {console}_working/ folder to do operations.'.format(console=console))
+time.sleep(2)
+
+
 # and at the end, replace the original console folder with the _cleaned folder
 
 
@@ -96,39 +106,58 @@ time.sleep(1)
 
 
 
+'''               ^
+                 / \
+                  |
+                  |
+                  |-------   that stuff made the working and cleaned folders
 
 
 
 
 
+                  |------   this stuff does the following:
+                  |               - tags each file
+                  |               - sorts them into their own tag folders
+                  |               -
+                 \ /
+                  v
 
 
 
 
 
+'''
 
 
+buffer_file = ''
+
+regions = ['U', 'J', 'E', 'G', 'F']
+
+extension = []
+
+for key, value in extensionDict.items():
+    if key == console:
+        for ext in value:
+            extension.append(ext[1:])
+extension = '|'.join(extension)
+
+# create regex object to match filenames with no tags
+# Sim Ant.smc
+purePattern = re.compile(r'[^\]][^\)]\.({extension})'.format(extension=extension))
 
 
+# create regex object to match filenames with [tag1] type tags
+# Lagoon (U) [b1].smc
+tagPattern = re.compile(r'\[([a-z])+')
 
+# create regex object to match filenames with (U) type region tags
+# Rockman X (J) (V1.0) [f1].smc
+regionPattern = re.compile(r'\([E|U|G|J]')
 
-
-
-
-''' this next part looks through the game folders and organizes the game files '''
-
-
-
-
-# switch to backup console folder
-os.chdir(console + '_working')
-print('Moved to {console}_working/ folder to do operations.'.format(console=console))
-time.sleep(2)
-
-
-
-# data imported from patterns.py
-
+# create regex object to match filenames with [!] type tags
+# Donkey Kong Country (U) (V1.2) [!].smc
+definitivePattern = re.compile(r'\[!\]')
 
 
 
@@ -137,6 +166,10 @@ for folder in os.listdir('.'):
     if not folder.startswith('0') and os.path.isdir(folder):
 
 
+
+
+
+        ''' FOR EACH GAME FOLDER '''
 
         ''' the following will be done to every folder inside <console>/ that doesn't start with '0X - '    '''
 
@@ -149,8 +182,19 @@ for folder in os.listdir('.'):
         pureFiles = []
         tagFiles = []
         regionFiles = []
+        uFiles = []
+        eFiles = []
+        jFiles = []
+        gFiles = []
+        fFiles = []
         definitiveFiles = []
         betaFiles = []
+        folders = [
+            pureFiles,
+            regionFiles,
+            tagFiles,
+            betaFiles,
+        ]
 
         # just a counter for each file inside a game folder
         numberOfFiles = 0
@@ -159,23 +203,21 @@ for folder in os.listdir('.'):
 
 
 
-        print('\nOkay here\'s all the shit for ' + folder + ':')
+        print('\n\nOkay here\'s all the shit for ' + folder + ':')
 
 
-
-
-        # for each file in the current game folder:
+        ''' do the following to each game file inside current game folder '''
         for file in os.listdir(folder):
 
 
 
-            ''' the following is done for each file inside the game folder  '''
 
 
+            '''     FOR EACH GAME FILE     '''
+            ''' sort current file into its respective folder above '''
 
 
-
-            # init flags that describe the filename
+            # init flag switches that describe the filename
             pureFlag = False
             tagFlag = False
             regionFlag = False
@@ -184,29 +226,27 @@ for folder in os.listdir('.'):
             htmlFlag = False
 
 
+            # if the file isn't an html file...
+            if not file.endswith('.htm') and not file.endswith('.html'):
 
 
-            # filter html files and DESTORY THEM
-            if file.endswith('htm') or file.endswith('.html'):
-                os.system('sudo rm {folder}/'.format(folder=folder) + file)
 
 
-                ''' the following switches the flags initialized above depending on the filename  '''
 
-            else:
+                ''' flip above switches depending on the filename  '''
 
-                # check for purity (example: young_merlin.sfc)
+                # check for purity (example: Young Merlin.sfc)
                 if '(' not in file and '[' not in file:
                     pureFlag = True
                     #pureFiles.append(file)
 
                 else:
-                    # check for region code (example: warlock (E).smc
-                    if '(E).smc' in file or '(E).sfc' in file or '(U).smc' in file or '(U).sfc' in file or '(G).smc' in file or '(G).sfc' in file or '(J).smc' in file or '(J).sfc' in file or '(F).smc' in file or '(F).sfc' in file:
+                    # check for region code (example: Warlock (E).smc
+                    if '(U).' in file or '(USA)' in file or '(E).' in file or '(G).' in file or '(J).' in file or '(F).' in file or 'japan' in file.lower():
                         regionFlag = True
                         #regionFiles.append(file)
 
-                    # check for definitive mark (example: super_mario_world [!].smc)
+                    # check for definitive mark (example: Super Mario World [!].smc)
                     if definitivePattern.search(file):
                         definitiveFlag = True
                         #definitiveFiles.append(file)
@@ -222,139 +262,196 @@ for folder in os.listdir('.'):
                         #betaFiles.append(file)
 
 
+
+
+
+
+                ''' sort current file based on switches flipped '''
+
+                # increment file count of games in folder
+                numberOfFiles += 1
+
                 if pureFlag:
-                    pureFiles.append(file)  # sim_ant.smc
+                    # Sim Ant.smc
+                    pureFiles.append(file)
+
                 else:
-                    if regionFlag and not betaFlag and not tagFlag:
-                        regionFiles.append(file)  # check for region / sim_ant (U).smc
-                    elif regionFlag and not betaFlag:
-                        tagFiles.append(file)  # check for region / sim_ant (U) [t1].smc
-                    elif not regionFlag and not betaFlag:
-                        tagFiles.append(file)  # probably a different version / sim_ant [b4].smc
+                    if regionFlag:
+                        # check for region / sim_ant (U).smc
+                        regionFiles.append(file)
+                        if '(U)' in file or '(USA)' in file:
+                            uFiles.append(file)
+                        elif '(E)' in file:
+                            eFiles.append(file)
+                        elif '(J)' in file or 'japan' in file.lower():
+                            jFiles.append(file)
+                        elif '(G)' in file:
+                            gFiles.append(file)
+                        elif '(F)' in file:
+                            fFiles.append(file)
+
+                    if tagFlag:
+                        # check for region / sim_ant (U) [t1].smc
+                        tagFiles.append(file)
+
                     elif betaFlag:
                         betaFiles.append(file)
 
+            # file is a .html file
+            else:
+                os.system('sudo rm {folder}/'.format(folder=folder) + file)
 
 
 
 
-                # increment file count of games in folder
-                if not htmlFlag:
-                    numberOfFiles += 1
+
+        pureFlag = False
+        regionFlag = False
+        tagFlag = False
+        betaFlag = False
 
 
-        # when done checking all the files in a games folder:
+        gameToClean = ''
+        if numberOfFiles == 1:
+            if len(pureFiles) > 0:
+                gameToClean = pureFiles[0]
+                pureFlag = True
+            elif len(regionFiles) > 0:
+                if len(uFiles) > 0:
+                    gameToClean = uFiles[0]
+                elif len(eFiles) > 0:
+                    gameToClean = eFiles[0]
+                elif len(jFiles) > 0:
+                    gameToClean = jFiles[0]
+                elif len(gFiles) > 0:
+                    gameToClean = gFiles[0]
+                elif len(fFiles) > 0:
+                    gameToClean = fFiles[0]
+            elif len(tagFiles) > 0:
+                gameToClean = tagFiles[0]
+            elif len(betaFiles) > 0:
+                gameToClean = betaFiles[0]
 
-        # CREATE NEW FOLDER FOR EACH GAME
-
-        # THIS WHOLE SECTION IS HARD-CODED FOR SNES
-
-
-        # PRIORITIZE PURE FILES. IF THERE'S A PURIFIED FILE, COPY IT OVER
-
-        #print('Here\'s all the pure stuff:')
-        # if there is anything in pureFiles, create a folder for the game in *_new and plop it in there
-
-        if len(pureFiles) > 0:
-            '''
-            print('Here are all the pure files for ' + folder)
-            for i in pureFiles:
-                print(i)
-            print('\n')
-            '''
-            title = ''                              # title becomes definitive version  --  aladdin.sfc
-            gameTitle = pureFiles[0]
-            gameTitle = list(gameTitle)
-            for i in gameTitle:
-                if i == ' ':
-                    title += '_'
-                elif i == '\'':
-                    pass
-                elif i == '!':
-                    pass
-                else:
-                    title += i.lower()
-            if os.path.isdir('../snes_cleaned/' + folder):
-                os.system('sudo rm -rf ../snes_cleaned/' + folder)
-            os.system('sudo mkdir ../snes_cleaned/' + folder)
-            os.system('sudo chmod 775 ../snes_cleaned/' + folder)
-            extension = title[-4:]
-            print('Pure: ' + title)
-            os.system('sudo mv \"' + folder + '\"/\"' + pureFiles[0] + '\" ../snes_cleaned/' + folder + '/' + folder + extension)
-            #print('Created ../snes_new/' + title[:-4] + '/' + title + '')
         else:
-            print('No pure file.')
+            for i in folders:
+                if len(i) > 0:
+
+                    # check pureFiles first
+                    if i == pureFiles:
+                        gameToClean = pureFiles[0]
+                        break
+
+
+                    # then check regionFiles
+                    elif i == regionFiles:
+
+                        # first check uFiles
+                        if len(uFiles) > 0:
+                            for file in uFiles:
+                                if file not in tagFiles and file not in betaFiles:
+                                    gameToClean = file
+                                    break
+                            if gameToClean == '':
+                                for file in uFiles:
+                                    if '[!]' in file:
+                                        gameToClean = file
+                                        break
+                                if gameToClean == '':
+                                    gameToClean = uFiles[0]
+
+                        # then check eFiles
+                        elif len(eFiles) > 0:
+                            for file in eFiles:
+                                if file not in tagFiles and file not in betaFiles:
+                                    gameToClean = file
+                                    break
+                            if gameToClean == '':
+                                for file in eFiles:
+                                    if '[!]' in file:
+                                        gameToClean = file
+                                        break
+                                if gameToClean == '':
+                                    gameToClean = eFiles[0]
+
+                        # then check jFiles
+                        elif len(jFiles) > 0:
+                            for file in jFiles:
+                                if file not in tagFiles and file not in betaFiles:
+                                    gameToClean = file
+                                    break
+                            if gameToClean == '':
+                                for file in jFiles:
+                                    if '[!]' in file:
+                                        gameToClean = file
+                                        break
+                                if gameToClean == '':
+                                    gameToClean = jFiles[0]
+
+                        # then check gFiles
+                        elif len(gFiles) > 0:
+                            for file in gFiles:
+                                if file not in tagFiles and file not in betaFiles:
+                                    gameToClean = file
+                                    break
+                            if gameToClean == '':
+                                for file in gFiles:
+                                    if '[!]' in file:
+                                        gameToClean = file
+                                        break
+                                if gameToClean == '':
+                                    gameToClean = gFiles[0]
+
+                        # then check gFiles
+                        elif len(fFiles) > 0:
+                            for file in fFiles:
+                                if file not in tagFiles and file not in betaFiles:
+                                    gameToClean = file
+                                    break
+                            if gameToClean == '':
+                                for file in fFiles:
+                                    if '[!]' in file:
+                                        gameToClean = file
+                                        break
+                                if gameToClean == '':
+                                    gameToClean = fFiles[0]
+
+                        if gameToClean != '':
+                            break
+
+                    # now check tagFiles
+                    elif i == tagFiles:
+                        for file in tagFiles:
+                            if '[!]' in file:
+                                gameToClean = file
+                                break
+                        if gameToClean == '':
+                            gameToClean = tagFiles[0]
+
+
+                    elif i == betaFiles:
+                        gameToClean = betaFiles[0]
+                        break
+
+
+        if gameToClean == '':
+            gameToClean = os.listdir(os.getcwd() + '/' + folder)[0]
+
+        gameTitle = folder + '{extension}'.format(extension=extensionDict[console][0])
+
+
+        os.system('sudo mkdir ../{console}_cleaned/{folder}'.format(
+            console=console,
+            folder=folder))
+
+        os.system('sudo mv {folder}/"{gameToClean}" ../{console}_cleaned/{folder}/{gameTitle}'.format(
+            folder=folder,
+            gameToClean=gameToClean,
+            console=console,
+            gameTitle=gameTitle))
 
 
 
 
-        # if there are any files in regionFiles, check if there's already a folder in *_cleaned and plop it over
-        # ONLY IF it's not also in betaFiles and tagFiles
-
-
-        #print('Here\'s all the region stuff:')
-
-        if len(regionFiles) > 0:
-            # do the following for each foreign version of the game
-            for game in regionFiles:
-                '''
-                print('Here are all the region files for ' + folder)
-                for i in regionFiles:
-                    if i not in betaFiles or i not in tagFiles:
-                        print(i)
-                print('\n')
-                '''
-
-
-
-                # create an empty version of the renamed file
-                if ').sfc' in game or ').smc' in game:
-                    # clean title
-                    title = ''
-                    for i in list(game):
-                        if i == ' ':
-                            title += '_'
-                        elif i == '\'' or i == '!':
-                            pass
-                        elif i == '(' or i == ')':
-                            pass  # this causes __j_. Change to pass to make it _j
-                        else:
-                            title += i.lower()
-                    # plop it over
-                    if not os.path.isdir('../snes_cleaned/' + folder):
-                        os.system('sudo mkdir ../snes_cleaned/' + folder)
-                        os.system('sudo chmod 775 ../snes_cleaned/' + folder)
-                    print('Region: ' + title)
-                    os.system('sudo mv \"' + folder + '\"/\"' + game + '\" ../snes_cleaned/' + folder + '/' + title)
-                    #print('Created ../snes_cleaned/' + title[:-4] + '/' + title)
-                else:
-                    print('Region file, but it\'s dirty.')
-
-
-
-        elif len(tagFiles) > 0:
-
-            for game in tagFiles:
-
-                # clean title
-                title = ''
-                for i in list(game):
-
-                    if i == ' ':
-                        title += '_'
-                    elif i == '\'' or i == '!' or i == '\"':
-                        pass
-                    elif i == '(' or i == ')':
-                        pass  # this causes __j_. Change to pass to make it _j
-                    else:
-                        title += i.lower()
-                # plop it over
-                if not os.path.isdir('../snes_cleaned/' + folder):
-                    os.system('sudo mkdir ../snes_cleaned/' + folder)
-                    os.system('sudo chmod 775 ../snes_cleaned/' + folder)
-                print('Tagged: ' + title)
-                os.system('sudo mv \"' + folder + '\"/\"' + game + '\" ../snes_cleaned/' + folder + '/' + title)
-                #print('Created ../snes_cleaned/' + title[:-4] + '/' + title)
 
 
 
@@ -364,5 +461,7 @@ for folder in os.listdir('.'):
 
 
 
-        print('\n')
-        gameTitle = ''.join(gameTitle)
+
+
+
+# yo

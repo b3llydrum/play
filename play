@@ -35,7 +35,7 @@ from data import *
 from functions import *
 
 
-# initialize directories to be used by play.py
+# initialize directories to be used by play
 home = os.path.expanduser('~')
 emulators = os.listdir('{home}/Games/emulators'.format(home=home))
 systems = os.listdir('{home}/Games/roms'.format(home=home))
@@ -49,14 +49,154 @@ openEmuFlag = False
 
 
 
-# if running with 1 argument
+
+
+
+
+
+
+
+
+
+# if running play with no arguments
 if len(sys.argv) == 1 or len(sys.argv) > 4:
     showHelp()
     sys.exit(0)
 
 
 
-# if play <emulator> <console> <game>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if running play with one argument
+if len(sys.argv) == 2:
+
+    # if asking for help, show help
+    if sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'show':
+        showHelp()
+        sys.exit(0)
+
+    # check for specified emulator and run if found
+    for emulator in emulatorDict.keys():
+        if sys.argv[1].lower() == emulator.lower():
+            emulator = sys.argv[1].lower()
+            if emulator == 'openemu':
+                os.system('open -a OpenEmu')
+            else:
+                os.system('wine {emulatorsPath}/{emulator}/{emulator}.exe'.format(
+                    emulatorsPath=emulatorsPath,
+                    emulator=emulator))
+
+    # if specified emulator not found, just run OpenEmu
+    os.system('open -a OpenEmu')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if running play with two arguments
+if len(sys.argv) == 3:
+
+    ''' SHOW '''
+    if sys.argv[1].lower() == 'show':
+
+        # this is what user is asking to be shown
+        system = sys.argv[2].lower()
+
+        # collect console if exists
+        for key, value in consoleDict.items():
+            if system in value:
+                system = key
+                continue
+
+        # show games if user asks
+        if system in systems:
+            os.system('clear')
+            print('\nHere are the games available for {system}:\n'.format(
+                system=system))
+            for game in os.listdir('{home}/Games/roms/{system}_cleaned/'.format(  # change this when console with cleaned
+                home=home,
+                system=system)):
+                print(game.lower())
+
+        # show consoles if user asks
+        elif system == 'consoles' or sys.argv[2].lower() == 'systems':
+            os.system('clear')
+            print('\nHere are the consoles with games available:\n')
+            for console in os.listdir('{home}/Games/roms/'.format(
+                home=home)):
+                if '_' not in console.lower():
+                  print(console.lower())
+
+        # show emulators if user asks
+        elif system == 'emulators':
+            os.system('clear')
+            print('\nHere are the emulators available for use:\n')
+            for emu in os.listdir('/Users/davidmaness/Games/emulators/'):
+              if '.' not in emu.lower():
+                print(emu.lower())
+
+        else:
+            showHelp()
+            sys.exit(0)
+
+        print('\n')
+        sys.exit(0)
+
+
+    ''' PLAY HELP '''
+
+    # if user is asking for help
+    if sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
+        showHelp()
+        sys.exit(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if running play with 3 arguments
+# play emulator system game
 if len(sys.argv) == 4:
 
     # flags for checking if everything is correct
@@ -97,6 +237,13 @@ if len(sys.argv) == 4:
             emulatorsPath=emulatorsPath,
             emulator=emulator)
 
+        command += ' Z:{consolesPath}/{console}_cleaned/{gameFolder}/{gameFile}'.format(
+            consolesPath=consolesPath,
+            console=console,
+            gameFolder=gameFolder,
+            gameFile=gameFile
+        )
+
     print(command)
     os.system(command)
 
@@ -105,91 +252,7 @@ if len(sys.argv) == 4:
 
 
 
-'''                                 PART I
-                                help, or show
 
-
-
-
-
-    PLAY SHOW'''
-
-# user is asking to see something
-if sys.argv[1].lower() == 'show':
-
-    ''' find out what the user wants to be shown and show it '''
-
-    # if user only says 'show'
-    if len(sys.argv) == 2:
-        showHelp()
-        sys.exit(0)
-
-    # this is what user is asking to be shown
-    system = sys.argv[2].lower()
-
-    # collect console if exists
-    for key, value in consoleDict.items():
-        if system in value:
-            system = key
-            continue
-
-    # show games if user asks
-    if system in systems:
-        os.system('clear')
-        print('\nHere are the games available for {system}:\n'.format(
-            system=system))
-        for game in os.listdir('{home}/Games/roms/{system}_cleaned/'.format(  # change this when console with cleaned
-            home=home,
-            system=system)):
-            print(game.lower())
-
-    # show consoles if user asks
-    elif system == 'consoles' or sys.argv[2].lower() == 'systems':
-        os.system('clear')
-        print('\nHere are the consoles with games available:\n')
-        for console in os.listdir('{home}/Games/roms/'.format(
-            home=home)):
-            print(console.lower())
-
-    # show emulators if user asks
-    elif system == 'emulators':
-        os.system('clear')
-        print('\nHere are the emulators available for use:\n')
-        for emu in os.listdir('/Users/davidmaness/Games/emulators/'):
-            print(emu.lower())
-
-    print('\n')
-    sys.exit(0)
-
-
-''' PLAY HELP '''
-
-# if user is asking for help
-if sys.argv[1].lower() == 'help' or sys.argv[1].lower() == 'use' or sys.argv[1].lower() == 'usage':
-    showHelp()
-    sys.exit(0)
-
-
-
-
-
-
-
-
-'''                                           PART II
-                                 user is asking to open a program
-
-
-
-
-
-              /----yes---- (consoleExists==True, emulatorExists==False, system == <console>, emulator == <emulator>)
- console? ---/
-              \                           /-----yes (consoleExists==False, emulatorExists==True, system == <emulator>)
-               \----no--- emulator? -----/
-                                          \
-                                           \----no---- error -> quit
-'''
 
 
 
@@ -279,6 +342,7 @@ if len(sys.argv) == 3:
 
 
     # if the game doesn't exist, throw an error
+
 
     if not os.path.isdir(gamePath):
         print('\nCannot find the game {game}.\nIt\'s possible the game folders have not been renamed.\n'.format(

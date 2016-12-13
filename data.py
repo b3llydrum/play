@@ -16,8 +16,8 @@ osxList = [
 # dictionary of consoles and their extensions
 extensionDict = {
     'gameboy' : ['.gb'],
-    'gameboy_color' : ['.gbc'],
-    'gameboy_advance' : ['.gba'],
+    'gameboy_color' : ['.gbc', '.gb'],
+    'gameboy_advance' : ['.gba', '.gbc', '.gb'],
     'nes' : ['.nes'],
     'snes' : ['.smc',
               '.sfc'
