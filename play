@@ -144,12 +144,12 @@ if len(sys.argv) == 3:
                 print(game.lower())
 
         # show consoles if user asks
-        elif system == 'consoles' or sys.argv[2].lower() == 'systems':
+        elif 'console' in system or 'system' in system:
             os.system('clear')
             print('\nHere are the consoles with games available:\n')
             for console in os.listdir('{home}/Games/roms/'.format(
                 home=home)):
-                if '_' not in console.lower():
+                if '_' not in console.lower() and '.' not in console.lower():
                   print(console.lower())
 
         # show emulators if user asks

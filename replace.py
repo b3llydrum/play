@@ -25,7 +25,8 @@ consoleList = [system for system in os.listdir(consolesPath) if os.path.isdir(sy
 
 # print out consoles for user to choose from
 for console in consoleList:
-    print(console)
+    if 'cleaned' not in console and 'working' not in console:
+        print(console)
 print('\n')
 
 # ask user which console folder they want to clean up

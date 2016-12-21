@@ -15,6 +15,7 @@ osxList = [
 
 # dictionary of consoles and their extensions
 extensionDict = {
+    'atari_2600' : ['.a26'],
     'gameboy' : ['.gb'],
     'gameboy_color' : ['.gbc', '.gb'],
     'gameboy_advance' : ['.gba', '.gbc', '.gb'],

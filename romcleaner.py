@@ -30,25 +30,29 @@ import time
 from data import *
 from functions import *
 
-
-
 # ~/Games/roms/
 consolesPath = getConsolesPath()
-
-
+time.sleep(1)
 # every console folder in consolesPath
 consoleList = [system for system in os.listdir(consolesPath)]
-
-
 # print every console for user to choose from
-for console in consoleList:
-    print(console)
-print('\n')
 
 
 
-# ask user which console folder they want to clean up
-console = getConsoleFromUser(consoleList)
+# get console from user
+if len(sys.argv) > 1:
+    if sys.argv[1].lower() in consoleList:
+        console = sys.argv[1]
+    print('Cleaning files in {folder}\n'.format(
+        folder=console))
+    time.sleep(2)
+else:
+    for console in consoleList:
+        if '.' not in console and '_working' not in console and '_cleaned' not in console:
+            print(console)
+    print('\n')
+    # ask user which console folder they want to clean up
+    console = getConsoleFromUser(consoleList)
 
 
 # change directory to the parent of console
@@ -58,7 +62,7 @@ os.chdir(consolesPath)
 
 ''' once console folder is chosen,
         create backup folder on which to operate
-            and create new folder to paste everything into  '''
+            and create new folder to paste everything into '''
 
 
 # create backup folder for uncleaned console folder
@@ -74,22 +78,24 @@ os.chdir(consolesPath)
 if os.path.exists(console + '_working'):
     print('\nDeleting current {console}_working/ folder...'.format(console=console))
     os.system('sudo rm -rf ' + console + '_working')
+    time.sleep(2)
 
 
 # then copy console folder into backup folder
 os.makedirs(console + '_working')
 print('Creating new {console}_working/ folder...'.format(console=console))
 os.system('sudo cp -R ' + console + '/ ' + console + '_working')
+time.sleep(2)
 
 
 # create destination folder
 if os.path.exists(console + '_cleaned'):
     print('\nDeleting current {console}_cleaned/ folder...'.format(console=console))
     os.system('sudo rm -rf ' + console + '_cleaned')
+    time.sleep(2)
 print('... and creating new {console}_cleaned/ folder as destination.\n'.format(console=console))
 os.makedirs(console + '_cleaned')
-time.sleep(1)
-
+time.sleep(2)
 
 # switch to backup console folder
 os.chdir(console + '_working')
@@ -98,6 +104,8 @@ time.sleep(2)
 
 
 # and at the end, replace the original console folder with the _cleaned folder
+# this will involved deleting every _working and _cleaned folder
+# and you better be DAMG SURE it works perfectly! It's replacing the source!
 
 
 
@@ -119,7 +127,7 @@ time.sleep(2)
                   |------   this stuff does the following:
                   |               - tags each file
                   |               - sorts them into their own tag folders
-                  |               -
+                  |
                  \ /
                   v
 
@@ -136,6 +144,7 @@ regions = ['U', 'J', 'E', 'G', 'F']
 
 extension = []
 
+# create extension string for regex pattern
 for key, value in extensionDict.items():
     if key == console:
         for ext in value:
@@ -158,6 +167,9 @@ regionPattern = re.compile(r'\([E|U|G|J]')
 # create regex object to match filenames with [!] type tags
 # Donkey Kong Country (U) (V1.2) [!].smc
 definitivePattern = re.compile(r'\[!\]')
+
+
+
 
 
 
@@ -203,7 +215,7 @@ for folder in os.listdir('.'):
 
 
 
-        print('\n\nOkay here\'s all the shit for ' + folder + ':')
+        #print('\nCleaned ' + folder)
 
 
         ''' do the following to each game file inside current game folder '''
@@ -242,9 +254,11 @@ for folder in os.listdir('.'):
 
                 else:
                     # check for region code (example: Warlock (E).smc
-                    if '(U).' in file or '(USA)' in file or '(E).' in file or '(G).' in file or '(J).' in file or '(F).' in file or 'japan' in file.lower():
+                    if '(U)' in file or '(USA)' in file or '(E)' in file or '(G)' in file or '(J)' in file or '(F)' in file or 'japan' in file.lower():
                         regionFlag = True
                         #regionFiles.append(file)
+                        if '(U)' in file and '[!]' in file:
+                            pureFlag = True
 
                     # check for definitive mark (example: Super Mario World [!].smc)
                     if definitivePattern.search(file):
@@ -280,7 +294,10 @@ for folder in os.listdir('.'):
                         # check for region / sim_ant (U).smc
                         regionFiles.append(file)
                         if '(U)' in file or '(USA)' in file:
-                            uFiles.append(file)
+                            if '[!]' in file:
+                                pureFiles.append(file)
+                            else:
+                                uFiles.append(file)
                         elif '(E)' in file:
                             eFiles.append(file)
                         elif '(J)' in file or 'japan' in file.lower():
@@ -312,39 +329,42 @@ for folder in os.listdir('.'):
 
 
         gameToClean = ''
-        if numberOfFiles == 1:
-            if len(pureFiles) > 0:
-                gameToClean = pureFiles[0]
-                pureFlag = True
-            elif len(regionFiles) > 0:
-                if len(uFiles) > 0:
-                    gameToClean = uFiles[0]
-                elif len(eFiles) > 0:
-                    gameToClean = eFiles[0]
-                elif len(jFiles) > 0:
-                    gameToClean = jFiles[0]
-                elif len(gFiles) > 0:
-                    gameToClean = gFiles[0]
-                elif len(fFiles) > 0:
-                    gameToClean = fFiles[0]
-            elif len(tagFiles) > 0:
-                gameToClean = tagFiles[0]
-            elif len(betaFiles) > 0:
-                gameToClean = betaFiles[0]
 
-        else:
+        if len(pureFiles) > 0:
+            gameToClean = pureFiles[0]
+            pureFlag = True
+        elif len(regionFiles) > 0:
+            if len(uFiles) > 0:
+                gameToClean = uFiles[0]
+            elif len(eFiles) > 0:
+                gameToClean = eFiles[0]
+            elif len(jFiles) > 0:
+                gameToClean = jFiles[0]
+            elif len(gFiles) > 0:
+                gameToClean = gFiles[0]
+            elif len(fFiles) > 0:
+                gameToClean = fFiles[0]
+        elif len(tagFiles) > 0:
+            gameToClean = tagFiles[0]
+        elif len(betaFiles) > 0:
+            gameToClean = betaFiles[0]
+
+        if gameToClean == '':
             for i in folders:
                 if len(i) > 0:
 
                     # check pureFiles first
                     if i == pureFiles:
-                        gameToClean = pureFiles[0]
-                        break
+                        for i in pureFiles:
+                            if i.endswith('mario_world.smc'):
+                                gameToClean = i
+                                break
 
 
                     # then check regionFiles
                     elif i == regionFiles:
-
+                        if gameToClean != '':
+                            break
                         # first check uFiles
                         if len(uFiles) > 0:
                             for file in uFiles:
@@ -420,6 +440,8 @@ for folder in os.listdir('.'):
 
                     # now check tagFiles
                     elif i == tagFiles:
+                        if gameToClean != '':
+                            break
                         for file in tagFiles:
                             if '[!]' in file:
                                 gameToClean = file
@@ -429,32 +451,68 @@ for folder in os.listdir('.'):
 
 
                     elif i == betaFiles:
+                        if gameToClean != '':
+                            break
                         gameToClean = betaFiles[0]
                         break
 
-
         if gameToClean == '':
-            gameToClean = os.listdir(os.getcwd() + '/' + folder)[0]
+            for i in os.listdir(os.getcwd() + '/' + folder):
+                if '(U)' in i and '[!]' in i:
+                    gameToClean = i
+                    break
+                elif '(U)' in i:
+                    gameToClean = i
+                    break
+                elif '(E)' in i and '[!]' in i:
+                    gameToClean = i
+                    break
+                elif '(E)' in i:
+                    gameToClean = i
+                    break
+                elif '(J)' in i and '[!]' in i:
+                    gameToClean = i
+                    break
+                elif '(J)' in i:
 
+                    gameToClean = i
+                    break
+                else:
+                    gameToClean = i
+                if gameToClean != '':
+                    break
+
+
+        # renames chosen game to folder name cleaned by replace.py
         gameTitle = folder + '{extension}'.format(extension=extensionDict[console][0])
 
 
-        os.system('sudo mkdir ../{console}_cleaned/{folder}'.format(
+        os.system('sudo mkdir ../{console}_cleaned/"{folder}"'.format(
             console=console,
             folder=folder))
 
-        os.system('sudo mv {folder}/"{gameToClean}" ../{console}_cleaned/{folder}/{gameTitle}'.format(
+        '''
+        # debugging output
+        print('Renaming "{oldTitle}" to {newTitle}'.format(
+            oldTitle=gameToClean,
+            newTitle=gameTitle))
+        '''
+
+        command = 'sudo mv {folder}/"{gameToClean}" ../{console}_cleaned/{folder}/{gameTitle}'.format(
             folder=folder,
             gameToClean=gameToClean,
             console=console,
-            gameTitle=gameTitle))
+            gameTitle=gameTitle)
 
+        # you may fire when ready.
+        os.system(command)
 
-
-
-
-
-
+os.chdir('..')
+os.system('sudo rm -rf {console}_working'.format(
+    console=console))
+print('Finished cleaning. Removed {console}_working/ folder.\n'.format(
+    console=console))
+time.sleep(1)
 
 
 
