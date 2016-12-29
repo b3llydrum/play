@@ -7,6 +7,7 @@
 wineList = [
     'fceux',
     'lsnes',
+    'bgb',
 ]
 osxList = [
     'openemu',
@@ -94,6 +95,7 @@ consoleDict = {
 
 # dictionary of intended emulators
 emulatorDict = {
+    'bgb' : ['bgb'],
     'fceux' : ['fceux',
                'fcuex',
                'fcux',
@@ -115,6 +117,9 @@ emulatorDict = {
 
 # pairs console with its emulator
 emulatorConsoleDict = {
+    'bgb' : ['gameboy',
+             'gameboy_color'
+             ],
     'fceux' : ['nes'],
     'lsnes' : ['snes'],
     'OpenEmu' : ['gameboy',

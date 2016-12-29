@@ -90,19 +90,27 @@ if len(sys.argv) == 2:
         sys.exit(0)
 
     # check for specified emulator and run if found
+    emuExists = False
     for emulator in emulatorDict.keys():
         if sys.argv[1].lower() == emulator.lower():
+            emuExists = True
             emulator = sys.argv[1].lower()
             if emulator == 'openemu':
-                os.system('open -a OpenEmu')
+                command = 'open -a OpenEmu'
+                # os.system('open -a OpenEmu')
             else:
-                os.system('wine {emulatorsPath}/{emulator}/{emulator}.exe'.format(
+                command = 'wine {emulatorsPath}/{emulator}/{emulator}.exe'.format(
                     emulatorsPath=emulatorsPath,
-                    emulator=emulator))
+                    emulator=emulator)
+                #os.system('wine {emulatorsPath}/{emulator}/{emulator}.exe'.format(
+                    #emulatorsPath=emulatorsPath,
+                    #emulator=emulator))
+            continue
 
     # if specified emulator not found, just run OpenEmu
-    os.system('open -a OpenEmu')
-
+    if not emuExists:
+        print('Emulator not found.')
+        sys.exit(0)
 
 
 
@@ -241,13 +249,7 @@ if len(sys.argv) == 4:
             consolesPath=consolesPath,
             console=console,
             gameFolder=gameFolder,
-            gameFile=gameFile
-        )
-
-    print(command)
-    os.system(command)
-
-    sys.exit(0)
+            gameFile=gameFile)
 
 
 
@@ -338,7 +340,7 @@ if len(sys.argv) == 3:
         system=system,
         game=game)
 
-    print(gamePath)
+    print('Intended game path is ' + gamePath)
 
 
     # if the game doesn't exist, throw an error
@@ -378,7 +380,6 @@ if len(sys.argv) == 3:
 
 # next line is for debugging
 print('Command: {command}'.format(command=command))
-
 
 # run command and play!
 os.system(command)
