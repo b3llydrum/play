@@ -109,18 +109,15 @@ for i in range(startingGameIndex, len(gameList)):
             # remove temporary copy folder
             os.system('sudo rm -rf {gameFolderPath}new_{folderName}'.format(
                 gameFolderPath=gameFolderPath,
-                folderName=gameList[i]
-                ))
+                folderName=gameList[i]))
         else:
             os.system('sudo cp -R {gameFolderPath}\"{folderName}\"/ {gameFolderPath}{newFolderName}'.format(
                 gameFolderPath=gameFolderPath,
                 folderName=gameList[i],
-                newFolderName=newFolderName
-                ))
+                newFolderName=newFolderName))
             os.system('sudo rm -rf {gameFolderPath}\"{folderName}\"'.format(
                 gameFolderPath=gameFolderPath,
-                folderName=gameList[i]
-                ))
+                folderName=gameList[i]))
 
 print('\nAll done!\n')
 sys.exit(0)
