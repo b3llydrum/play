@@ -349,7 +349,7 @@ if len(sys.argv) == 3:
     if not os.path.isdir(gamePath):
         # play gameboy games on gameboy color
         if game in os.listdir('{home}/Games/roms/gameboy_cleaned/'.format(
-            home=home)):
+            home=home)) and system == 'gameboy_color' or system == 'gameboy_advance':
             system = 'gameboy'
             gamePath = '{home}/Games/roms/{system}_cleaned/{game}/'.format(  # change this line if replace with cleaned
                 home=home,
