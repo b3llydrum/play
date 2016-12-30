@@ -14,9 +14,11 @@
 
 import os
 import sys
+from pprint import pprint
 from functions import *
 
 # go to where the consoles live
+homeDir = os.path.expanduser('~')
 consolesPath = getConsolesPath()
 os.chdir(consolesPath)
 
@@ -36,7 +38,8 @@ console = getConsoleFromUser(consoleList)
 # create list of game folder names for user to clean
 gameList = os.listdir(consolesPath + '/' + console)
 
-
+pprint(gameList)
+print('\n')
 
 startingGameIndex = 0
 

@@ -152,3 +152,18 @@ openEmuList = ['gameboy',
                'sega_genesis',
                'snes',
                ]
+
+
+# do not let these characters into folder and file names
+skippableChars = [
+    '.',
+    ',',
+    '\'',
+    '!',
+    '!',
+    '?',
+    '&',
+    '+',
+    '(',
+    ')',
+]
