@@ -1,2 +1,6 @@
 Python==3.5.2
 wine=1.7.0
+# openemu
+# fceux
+# lsnes
+# argcomplete
