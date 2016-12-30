@@ -43,12 +43,10 @@ consolesPath = '{home}/Games/roms'.format(home=home)
 
 
 
-
-
-
-
 # TODO: figure this arg complete shit out
 
+
+'''
 def gamesList(prefix, parsed_args, **kwargs):
     resource = os.listdir(consolesPath + '/{console}'.format(console=parsed_args.system))
     return resource
@@ -63,7 +61,7 @@ parser.add_argument("--game", help="pick a game").completer = gamesList
 argcomplete.autocomplete(parser)
 args = parser.parse_args()
 
-
+'''
 
 
 
