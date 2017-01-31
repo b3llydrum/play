@@ -1,10 +1,11 @@
 # play #
 
-1. use replace to rename every folder in your game directory as such:
-  - all lowercase
-  - all spaces (' ') are underscores ('\_')
-  - subtitles are removed
-  - roman numerals are changed to digits
+play assumes a couple things:
+- you already have the games downloaded
+- you already have the emulators
 
-2. use romcleaner to rename every file inside each renamed folder so that
-  play.py can find the files
+play does the following to help you:
+- rename downloaded files using a standard that play uses to access games
+- automatically open the appropriate emulator based on the console you ask for
+- display a list of consoles you have
+- display a list of games you have

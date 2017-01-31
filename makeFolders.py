@@ -9,7 +9,10 @@
 #                                           #
 '''''''''''''''''''''''''''''''''''''''''''''
 
+# aka UNZIP ZIPPED FILES AND GET RID OF THEM FIRST
+
 # TODO: make stopCopyingIndex depend on console extension
+
 
 import os
 import sys
@@ -56,7 +59,7 @@ def firstClean(gameList):  # Ratatouille (E)(Puppa).gba
     for title in gameList:
         newTitle = ''
         # this index stops the for loop from copying the extension
-        stopCopyingIndex = -3  # TODO: make this depend on console extension
+        stopCopyingIndex = -4  # TODO: make this depend on console extension
         # this for loop removes unwanted characters
         for i in range(len(title)):
             if title[i] not in skippableChars:
